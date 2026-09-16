@@ -1,0 +1,232 @@
+Ablation 1 — n_demos=3, n_candidates=20
+Random seed: 3496847610
+Zero-shot val score:  0.933
+Optimized val score:  1.000
+Improvement:          0.067
+
+Score distribution across 20 candidates:
+  min:  0.533
+  max:  1.000
+  mean: 0.880
+
+── All candidates (ranked) ──────────────────────────────
+
+Rank 1  |  score=1.000
+  Demo 1:
+    input: I canceled my account but was charged again this month.
+    gold:  billing
+  Demo 2:
+    input: Two-factor authentication codes are not being delivered to my phone.
+    gold:  technical
+  Demo 3:
+    input: Importing a spreadsheet from Google Sheets fails with a permissions error.
+    gold:  technical
+
+Rank 2  |  score=1.000
+  Demo 1:
+    input: The app keeps crashing when I try to upload a file larger than 10 MB.
+    gold:  technical
+  Demo 2:
+    input: How do I invite a teammate to my workspace?
+    gold:  general
+  Demo 3:
+    input: Two-factor authentication codes are not being delivered to my phone.
+    gold:  technical
+
+Rank 3  |  score=1.000
+  Demo 1:
+    input: The billing portal page throws a '403 Forbidden' error when I try to open it.
+    gold:  technical
+  Demo 2:
+    input: The calendar view doesn't render correctly on Firefox.
+    gold:  technical
+  Demo 3:
+    input: How do I invite a teammate to my workspace?
+    gold:  general
+
+Rank 4  |  score=1.000
+  Demo 1:
+    input: My saved filters in the reporting dashboard reset every time I reload the page.
+    gold:  technical
+  Demo 2:
+    input: Our organization is being charged sales tax but we are tax-exempt — can you fix this?
+    gold:  billing
+  Demo 3:
+    input: My team was billed for 10 seats but we only have 8 users.
+    gold:  billing
+
+Rank 5  |  score=0.933
+  Demo 1:
+    input: The billing portal page throws a '403 Forbidden' error when I try to open it.
+    gold:  technical
+  Demo 2:
+    input: How do I download a copy of my latest invoice?
+    gold:  billing
+  Demo 3:
+    input: The API returns stale data even after I clear the cache.
+    gold:  technical
+
+Rank 6  |  score=0.933
+  Demo 1:
+    input: My free trial ended and I was automatically charged without any warning.
+    gold:  billing
+  Demo 2:
+    input: The API is returning a 500 error on all POST requests.
+    gold:  technical
+  Demo 3:
+    input: Why was I charged a different amount than what the pricing page shows?
+    gold:  billing
+
+Rank 7  |  score=0.933
+  Demo 1:
+    input: I need a VAT receipt for my last payment.
+    gold:  billing
+  Demo 2:
+    input: I was charged twice for my subscription this month.
+    gold:  billing
+  Demo 3:
+    input: My credit card was declined when my subscription tried to renew.
+    gold:  billing
+
+Rank 8  |  score=0.933
+  Demo 1:
+    input: My team was billed for 10 seats but we only have 8 users.
+    gold:  billing
+  Demo 2:
+    input: The mobile app doesn't sync offline edits when the connection is restored.
+    gold:  technical
+  Demo 3:
+    input: My credit card was declined when my subscription tried to renew.
+    gold:  billing
+
+Rank 9  |  score=0.933
+  Demo 1:
+    input: What file formats does the export feature support?
+    gold:  general
+  Demo 2:
+    input: The dashboard shows a blank white screen after I log in.
+    gold:  technical
+  Demo 3:
+    input: Can I get a refund for last month's payment?
+    gold:  billing
+
+Rank 10  |  score=0.933
+  Demo 1:
+    input: Importing a spreadsheet from Google Sheets fails with a permissions error.
+    gold:  technical
+  Demo 2:
+    input: My subscription renewed at full price even though I was on a promotional rate.
+    gold:  billing
+  Demo 3:
+    input: Can I have multiple workspaces under a single login?
+    gold:  general
+
+Rank 11  |  score=0.867
+  Demo 1:
+    input: How do I remove a saved credit card from my account?
+    gold:  billing
+  Demo 2:
+    input: My credit card was declined when my subscription tried to renew.
+    gold:  billing
+  Demo 3:
+    input: The email template editor freezes whenever I try to insert an image.
+    gold:  technical
+
+Rank 12  |  score=0.867
+  Demo 1:
+    input: Can I have a dedicated account manager for our enterprise team?
+    gold:  general
+  Demo 2:
+    input: How do I invite a teammate to my workspace?
+    gold:  general
+  Demo 3:
+    input: Can I have multiple workspaces under a single login?
+    gold:  general
+
+Rank 13  |  score=0.867
+  Demo 1:
+    input: What is your SLA guarantee for enterprise customers?
+    gold:  general
+  Demo 2:
+    input: The app keeps crashing when I try to upload a file larger than 10 MB.
+    gold:  technical
+  Demo 3:
+    input: My API key stopped working immediately after I regenerated it in the settings panel.
+    gold:  technical
+
+Rank 14  |  score=0.867
+  Demo 1:
+    input: Can I have a dedicated account manager for our enterprise team?
+    gold:  general
+  Demo 2:
+    input: What are your customer support hours on weekends?
+    gold:  general
+  Demo 3:
+    input: The Zapier zap I configured isn't triggering at all.
+    gold:  technical
+
+Rank 15  |  score=0.867
+  Demo 1:
+    input: My API key stopped working immediately after I regenerated it in the settings panel.
+    gold:  technical
+  Demo 2:
+    input: What is your SLA guarantee for enterprise customers?
+    gold:  general
+  Demo 3:
+    input: Can I pay for an annual plan upfront to get a lower rate?
+    gold:  billing
+
+Rank 16  |  score=0.800
+  Demo 1:
+    input: My free trial ended and I was automatically charged without any warning.
+    gold:  billing
+  Demo 2:
+    input: Where do I find the onboarding guide for new team members?
+    gold:  general
+  Demo 3:
+    input: Where can I find your privacy policy?
+    gold:  general
+
+Rank 17  |  score=0.800
+  Demo 1:
+    input: The billing portal page throws a '403 Forbidden' error when I try to open it.
+    gold:  technical
+  Demo 2:
+    input: I applied a promo code at checkout but the discount wasn't reflected.
+    gold:  billing
+  Demo 3:
+    input: How do I invite a teammate to my workspace?
+    gold:  general
+
+Rank 18  |  score=0.800
+  Demo 1:
+    input: Can I have a dedicated account manager for our enterprise team?
+    gold:  general
+  Demo 2:
+    input: I'd like to request a dark mode option for the app.
+    gold:  general
+  Demo 3:
+    input: Two-factor authentication codes are not being delivered to my phone.
+    gold:  technical
+
+Rank 19  |  score=0.733
+  Demo 1:
+    input: I was charged twice for my subscription this month.
+    gold:  billing
+  Demo 2:
+    input: What file formats does the export feature support?
+    gold:  general
+  Demo 3:
+    input: The search bar returns no results, even for items I know exist.
+    gold:  technical
+
+Rank 20  |  score=0.533
+  Demo 1:
+    input: I was promised a 20% discount during the sales call but it was never applied to my bill.
+    gold:  billing
+  Demo 2:
+    input: The search bar returns no results, even for items I know exist.
+    gold:  technical
+  Demo 3:
+    input: What is your SLA guarantee for enterprise customers?
+    gold:  general

@@ -1,0 +1,72 @@
+Example 1
+Input:     Do you offer discounts for nonprofit organizations?
+Predicted: billing
+Score:     0.5
+Critique:  While "billing" is somewhat related to discounts, the input specifically focuses on nonprofit organizations, which suggests a more precise category like "nonprofit policies" or "discounts."
+
+---
+
+Example 2
+Input:     Is there a way to set up automatic reminders for my team inside the platform?
+Predicted: technical
+Score:     1.0
+Critique:  The category "technical" fits because the input asks about setting up a functional feature within a platform, which is a technical inquiry.
+
+---
+
+Example 3
+Input:     How do I remove a saved credit card from my account?
+Predicted: general
+Score:     0.0
+Critique:  The category "general" does not fit because the input is specifically about account management and removing a saved credit card, which requires a more precise classification like "account settings" or "payment methods."
+
+---
+
+Example 4
+Input:     What happens to my integrations if I downgrade my plan?
+Predicted: billing
+Score:     0.5
+Critique:  While "billing" is somewhat related to downgrading a plan, the input specifically focuses on the impact on integrations, which is not directly addressed by this category.
+
+---
+
+Example 5
+Input:     I was charged twice for my subscription this month.
+Predicted: billing
+Score:     1.0
+Critique:  The category "billing" clearly fits the input because the issue described involves being charged twice, which is directly related to billing concerns.
+
+---
+
+Example 6
+Input:     The app keeps crashing when I try to upload a file larger than 10 MB.
+Predicted: technical
+Score:     1.0
+Critique:  The category "technical" clearly fits because the issue described involves a technical problem with the app crashing during file uploads.
+
+---
+
+Example 7
+Input:     What are your customer support hours on weekends?
+Predicted: general
+Score:     0.0
+Critique:  The category "general" does not fit because the input specifically asks about customer support hours, which pertains to a "customer service" or "business hours" category.
+
+---
+
+Example 8
+Input:     Can I get a refund for last month's payment?
+Predicted: billing
+Score:     1.0
+Critique:  The category "billing" clearly fits the input because the question pertains to a payment and refund, which are directly related to billing issues.
+
+---
+
+Example 9
+Input:     How do I download a copy of my latest invoice?
+Predicted: billing
+Score:     1.0
+Critique:  The category "billing" clearly fits the input because downloading an invoice is directly related to billing.
+
+---
+

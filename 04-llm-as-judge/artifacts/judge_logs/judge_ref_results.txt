@@ -1,0 +1,81 @@
+Example 1
+Input:     Do you offer discounts for nonprofit organizations?
+Gold:      general
+Predicted: billing
+Score:     0.0
+Critique:  The generated output "billing" is incorrect because the question pertains to general policies, not specific billing details.
+
+---
+
+Example 2
+Input:     Is there a way to set up automatic reminders for my team inside the platform?
+Gold:      general
+Predicted: technical
+Score:     0.5
+Critique:  The generated output is partially correct because "technical" relates to platform functionality, but "general" better fits the broad nature of the question about reminders.
+
+---
+
+Example 3
+Input:     How do I remove a saved credit card from my account?
+Gold:      billing
+Predicted: general
+Score:     0.5
+Critique:  While "general" is somewhat relevant, the correct label is "billing" because the question specifically pertains to managing payment methods.
+
+---
+
+Example 4
+Input:     What happens to my integrations if I downgrade my plan?
+Gold:      general
+Predicted: billing
+Score:     0.5
+Critique:  The generated output "billing" is partially correct as downgrading a plan often involves billing changes, but the question is more broadly about "general" impacts, including integrations.
+
+---
+
+Example 5
+Input:     I was charged twice for my subscription this month.
+Gold:      billing
+Predicted: billing
+Score:     1.0
+Critique:  The generated output correctly identifies "billing" as the appropriate classification for the input about being charged twice.
+
+---
+
+Example 6
+Input:     The app keeps crashing when I try to upload a file larger than 10 MB.
+Gold:      technical
+Predicted: technical
+Score:     1.0
+Critique:  The generated output correctly identifies the issue as technical, matching the expected classification.
+
+---
+
+Example 7
+Input:     What are your customer support hours on weekends?
+Gold:      general
+Predicted: general
+Score:     1.0
+Critique:  The generated output correctly matches the expected classification of "general."
+
+---
+
+Example 8
+Input:     Can I get a refund for last month's payment?
+Gold:      billing
+Predicted: billing
+Score:     1.0
+Critique:  The generated output correctly identifies "billing" as the appropriate classification for the input question about a refund.
+
+---
+
+Example 9
+Input:     How do I download a copy of my latest invoice?
+Gold:      billing
+Predicted: billing
+Score:     1.0
+Critique:  The generated output "billing" is fully correct as it accurately matches the expected classification for the query about downloading an invoice.
+
+---
+

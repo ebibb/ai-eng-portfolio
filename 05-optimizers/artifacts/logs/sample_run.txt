@@ -1,0 +1,45 @@
+==============================================================
+optimizer_v3 run log
+==============================================================
+
+── Hyperparameters ─────────────────────────────────────────
+  seed_instruction    : Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.
+  n_instructions      : 3
+  n_demo_subsets      : 5
+  n_demos             : 3
+  n_initial           : 4
+  n_iterations        : 10
+  length_scale        : 1.0
+  signal_var          : 1.0
+  noise_var           : 0.1
+
+  zero-shot baseline : 0.933
+  candidate pool size: 20
+
+── Warm Start ──────────────────────────────────────────────
+  candidate   1: score=1.000
+  candidate  19: score=1.000
+  candidate   2: score=0.933
+  candidate   4: score=1.000
+
+── BO Iterations ───────────────────────────────────────────
+  Iter  Cand     GP μ     GP σ   Actual    Best↑  Instruction
+  -----------------------------------------------------------
+     1     6   0.8943   0.5361    1.000    1.000  Classify the following customer support 
+     2    13   0.9337   0.4899    1.000    1.000  Categorize the given customer support ti
+     3    18   0.9239   0.5021    1.000    1.000  Determine whether the given customer sup
+     4    12   0.9199   0.5072    0.933    1.000  Categorize the given customer support ti
+     5    17   0.9253   0.4956    1.000    1.000  Determine whether the given customer sup
+     6     0   0.9342   0.4817    0.933    1.000  Classify the following customer support 
+     7     7   0.9646   0.4374    1.000    1.000  Classify the following customer support 
+     8    10   0.9656   0.4357    0.867    1.000  Categorize the given customer support ti
+     9     3   0.9472   0.4568    0.933    1.000  Classify the following customer support 
+    10     9   0.9765   0.4105    0.933    1.000  Classify the following customer support 
+
+── Final Comparison ────────────────────────────────────────
+  zero-shot  : 0.933
+  v3 (best)  : 1.000
+  improvement: +0.067
+
+── Best Instruction ────────────────────────────────────────
+  Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.

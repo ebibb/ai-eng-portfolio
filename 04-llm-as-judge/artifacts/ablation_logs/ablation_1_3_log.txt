@@ -1,0 +1,23 @@
+Ablation 1 — n_demos=3, n_candidates=1
+Random seed: 2631043510
+Zero-shot val score:  0.933
+Optimized val score:  0.800
+Improvement:          -0.133
+
+Score distribution across 1 candidates:
+  min:  0.800
+  max:  0.800
+  mean: 0.800
+
+── All candidates (ranked) ──────────────────────────────
+
+Rank 1  |  score=0.800
+  Demo 1:
+    input: What is your SLA guarantee for enterprise customers?
+    gold:  general
+  Demo 2:
+    input: The API is returning a 500 error on all POST requests.
+    gold:  technical
+  Demo 3:
+    input: Do you have a native desktop app for Windows?
+    gold:  general

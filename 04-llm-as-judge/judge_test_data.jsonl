@@ -1,0 +1,9 @@
+{"input": "Do you offer discounts for nonprofit organizations?", "prediction": "billing", "gold": "general", "score": 0.0}
+{"input": "Is there a way to set up automatic reminders for my team inside the platform?", "prediction": "technical", "gold": "general", "score": 0.0}
+{"input": "How do I remove a saved credit card from my account?", "prediction": "general", "gold": "billing", "score": 0.0}
+{"input": "What happens to my integrations if I downgrade my plan?", "prediction": "billing", "gold": "general", "score": 0.0}
+{"input": "I was charged twice for my subscription this month.", "prediction": "billing", "gold": "billing", "score": 1.0}
+{"input": "The app keeps crashing when I try to upload a file larger than 10 MB.", "prediction": "technical", "gold": "technical", "score": 1.0}
+{"input": "What are your customer support hours on weekends?", "prediction": "general", "gold": "general", "score": 1.0}
+{"input": "Can I get a refund for last month's payment?", "prediction": "billing", "gold": "billing", "score": 1.0}
+{"input": "How do I download a copy of my latest invoice?", "prediction": "billing", "gold": "billing", "score": 1.0}

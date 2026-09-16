@@ -1,0 +1,62 @@
+Ablation 1 — n_demos=1, n_candidates=10
+Random seed: 4070216102
+Zero-shot val score:  0.933
+Optimized val score:  1.000
+Improvement:          0.067
+
+Score distribution across 10 candidates:
+  min:  0.867
+  max:  1.000
+  mean: 0.913
+
+── All candidates (ranked) ──────────────────────────────
+
+Rank 1  |  score=1.000
+  Demo 1:
+    input: My saved filters in the reporting dashboard reset every time I reload the page.
+    gold:  technical
+
+Rank 2  |  score=0.933
+  Demo 1:
+    input: The app keeps crashing when I try to upload a file larger than 10 MB.
+    gold:  technical
+
+Rank 3  |  score=0.933
+  Demo 1:
+    input: How do I remove a saved credit card from my account?
+    gold:  billing
+
+Rank 4  |  score=0.933
+  Demo 1:
+    input: The CSV export always produces an empty file.
+    gold:  technical
+
+Rank 5  |  score=0.933
+  Demo 1:
+    input: I need to update the billing address on my account.
+    gold:  billing
+
+Rank 6  |  score=0.933
+  Demo 1:
+    input: Do you offer discounts for nonprofit organizations?
+    gold:  general
+
+Rank 7  |  score=0.867
+  Demo 1:
+    input: Dark mode is broken — text is invisible against the dark background.
+    gold:  technical
+
+Rank 8  |  score=0.867
+  Demo 1:
+    input: Can I have a dedicated account manager for our enterprise team?
+    gold:  general
+
+Rank 9  |  score=0.867
+  Demo 1:
+    input: Can I have multiple workspaces under a single login?
+    gold:  general
+
+Rank 10  |  score=0.867
+  Demo 1:
+    input: What file formats does the export feature support?
+    gold:  general

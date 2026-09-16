@@ -1,0 +1,100 @@
+{"input": "I was charged twice for my subscription this month.", "gold": "billing", "split": "train"}
+{"input": "The app keeps crashing when I try to upload a file larger than 10 MB.", "gold": "technical", "split": "train"}
+{"input": "What are your customer support hours on weekends?", "gold": "general", "split": "train"}
+{"input": "My invoice shows an amount I don't recognize.", "gold": "billing", "split": "val"}
+{"input": "I cannot log in after resetting my password — the page just hangs.", "gold": "technical", "split": "test"}
+{"input": "Can I get a refund for last month's payment?", "gold": "billing", "split": "train"}
+{"input": "How do I download a copy of my latest invoice?", "gold": "billing", "split": "train"}
+{"input": "I canceled my account but was charged again this month.", "gold": "billing", "split": "train"}
+{"input": "My credit card was declined when my subscription tried to renew.", "gold": "billing", "split": "train"}
+{"input": "I applied a promo code at checkout but the discount wasn't reflected.", "gold": "billing", "split": "train"}
+{"input": "I need to update the billing address on my account.", "gold": "billing", "split": "train"}
+{"input": "My team was billed for 10 seats but we only have 8 users.", "gold": "billing", "split": "train"}
+{"input": "I received a payment failure notification — what should I do next?", "gold": "billing", "split": "train"}
+{"input": "I want to switch from monthly to annual billing.", "gold": "billing", "split": "train"}
+{"input": "I'm being billed for an add-on I never enabled.", "gold": "billing", "split": "train"}
+{"input": "I want to close my account and get a refund for the unused days.", "gold": "billing", "split": "train"}
+{"input": "Why was I charged a different amount than what the pricing page shows?", "gold": "billing", "split": "train"}
+{"input": "The API is returning a 500 error on all POST requests.", "gold": "technical", "split": "train"}
+{"input": "My Slack integration stopped syncing after your latest update.", "gold": "technical", "split": "train"}
+{"input": "The CSV export always produces an empty file.", "gold": "technical", "split": "train"}
+{"input": "I get a 'connection timeout' every time I try to sync my data.", "gold": "technical", "split": "train"}
+{"input": "The mobile app crashes immediately on launch on my iPhone.", "gold": "technical", "split": "train"}
+{"input": "My webhook endpoint is not receiving any events.", "gold": "technical", "split": "train"}
+{"input": "The search bar returns no results, even for items I know exist.", "gold": "technical", "split": "train"}
+{"input": "Two-factor authentication codes are not being delivered to my phone.", "gold": "technical", "split": "train"}
+{"input": "Notification emails from your platform stopped arriving two days ago.", "gold": "technical", "split": "train"}
+{"input": "The dashboard shows a blank white screen after I log in.", "gold": "technical", "split": "train"}
+{"input": "File uploads freeze at 99% and never complete.", "gold": "technical", "split": "train"}
+{"input": "The billing portal page throws a '403 Forbidden' error when I try to open it.", "gold": "technical", "split": "train"}
+{"input": "How do I change the email address associated with my account?", "gold": "general", "split": "train"}
+{"input": "Where can I find your privacy policy?", "gold": "general", "split": "train"}
+{"input": "I'm new and would like a quick walkthrough of the main features.", "gold": "general", "split": "train"}
+{"input": "Do you offer discounts for nonprofit organizations?", "gold": "general", "split": "train"}
+{"input": "How many users can I add under my current plan?", "gold": "general", "split": "train"}
+{"input": "How do I invite a teammate to my workspace?", "gold": "general", "split": "train"}
+{"input": "What file formats does the export feature support?", "gold": "general", "split": "train"}
+{"input": "How long do you retain my data after I cancel my account?", "gold": "general", "split": "train"}
+{"input": "I'd like to request a dark mode option for the app.", "gold": "general", "split": "train"}
+{"input": "Is there a way to set up automatic reminders for my team inside the platform?", "gold": "general", "split": "train"}
+{"input": "Where do I find the onboarding guide for new team members?", "gold": "general", "split": "train"}
+{"input": "My invoice includes a tax charge I wasn't expecting.", "gold": "billing", "split": "val"}
+{"input": "I'd like to dispute a charge from three months ago.", "gold": "billing", "split": "val"}
+{"input": "I was charged for the next billing cycle right after my payment failed — is that normal?", "gold": "billing", "split": "val"}
+{"input": "Single sign-on login returns an error after I enter my credentials.", "gold": "technical", "split": "val"}
+{"input": "Since the last update, the app has become noticeably slow.", "gold": "technical", "split": "val"}
+{"input": "How do I permanently delete my account?", "gold": "general", "split": "val"}
+{"input": "What is the difference between the Basic and Pro plans?", "gold": "general", "split": "val"}
+{"input": "Can I use your platform in languages other than English?", "gold": "general", "split": "val"}
+{"input": "I received a refund confirmation email but the money hasn't appeared in my account yet.", "gold": "billing", "split": "test"}
+{"input": "I'm being charged at the old price even though you reduced your rates last week.", "gold": "billing", "split": "test"}
+{"input": "I signed up for the free trial but was immediately charged the full amount.", "gold": "billing", "split": "test"}
+{"input": "The REST API documentation is outdated — the endpoints listed don't match actual behavior.", "gold": "technical", "split": "test"}
+{"input": "My data export is missing records that should be there.", "gold": "technical", "split": "test"}
+{"input": "What is your data privacy policy for customers in the EU?", "gold": "general", "split": "test"}
+{"input": "Can I bulk-import users via a CSV file?", "gold": "general", "split": "test"}
+{"input": "I need a VAT receipt for my last payment.", "gold": "billing", "split": "train"}
+{"input": "My free trial ended and I was automatically charged without any warning.", "gold": "billing", "split": "train"}
+{"input": "Can I pay for an annual plan upfront to get a lower rate?", "gold": "billing", "split": "train"}
+{"input": "I need to add a purchase order number to my invoices for our accounting team.", "gold": "billing", "split": "train"}
+{"input": "My subscription renewed at full price even though I was on a promotional rate.", "gold": "billing", "split": "train"}
+{"input": "How do I remove a saved credit card from my account?", "gold": "billing", "split": "train"}
+{"input": "I was promised a 20% discount during the sales call but it was never applied to my bill.", "gold": "billing", "split": "train"}
+{"input": "I accidentally purchased the wrong plan — can I switch and get a partial refund?", "gold": "billing", "split": "train"}
+{"input": "Our organization is being charged sales tax but we are tax-exempt — can you fix this?", "gold": "billing", "split": "train"}
+{"input": "Importing a spreadsheet from Google Sheets fails with a permissions error.", "gold": "technical", "split": "train"}
+{"input": "The calendar view doesn't render correctly on Firefox.", "gold": "technical", "split": "train"}
+{"input": "My API key stopped working immediately after I regenerated it in the settings panel.", "gold": "technical", "split": "train"}
+{"input": "The Zapier zap I configured isn't triggering at all.", "gold": "technical", "split": "train"}
+{"input": "I'm getting a 'rate limit exceeded' error even though I'm well under my usage quota.", "gold": "technical", "split": "train"}
+{"input": "The email template editor freezes whenever I try to insert an image.", "gold": "technical", "split": "train"}
+{"input": "My saved filters in the reporting dashboard reset every time I reload the page.", "gold": "technical", "split": "train"}
+{"input": "Dark mode is broken — text is invisible against the dark background.", "gold": "technical", "split": "train"}
+{"input": "Push notifications on Android stopped working after I reinstalled the app.", "gold": "technical", "split": "train"}
+{"input": "How do I transfer workspace ownership to another user?", "gold": "general", "split": "train"}
+{"input": "What is your SLA guarantee for enterprise customers?", "gold": "general", "split": "train"}
+{"input": "Is your platform HIPAA compliant?", "gold": "general", "split": "train"}
+{"input": "Do you have a native desktop app for Windows?", "gold": "general", "split": "train"}
+{"input": "How do I enable two-factor authentication on my account?", "gold": "general", "split": "train"}
+{"input": "What happens to my integrations if I downgrade my plan?", "gold": "general", "split": "train"}
+{"input": "Is there a public status page where I can check for ongoing outages?", "gold": "general", "split": "train"}
+{"input": "Can I have a dedicated account manager for our enterprise team?", "gold": "general", "split": "train"}
+{"input": "How do I generate an access report for a compliance audit?", "gold": "general", "split": "train"}
+{"input": "Can I have multiple workspaces under a single login?", "gold": "general", "split": "train"}
+{"input": "I was charged for a seat belonging to a user I already deleted.", "gold": "billing", "split": "val"}
+{"input": "My company needs invoices addressed to a different legal entity than the one on file.", "gold": "billing", "split": "val"}
+{"input": "The integration with our CRM is creating duplicate contact records.", "gold": "technical", "split": "val"}
+{"input": "The export button on the reports page does nothing when I click it.", "gold": "technical", "split": "val"}
+{"input": "I'm evaluating your platform for our enterprise team — who should I contact for a demo?", "gold": "general", "split": "val"}
+{"input": "How do I set permissions so certain users can only view and not edit content?", "gold": "general", "split": "val"}
+{"input": "My corporate card keeps getting rejected even though it is valid — is your payment processor blocking it?", "gold": "billing", "split": "test"}
+{"input": "Can I get an itemized breakdown of what I am being charged for each month?", "gold": "billing", "split": "test"}
+{"input": "After enabling SSO, existing users can no longer log in with their email and password.", "gold": "technical", "split": "test"}
+{"input": "The audit log only shows the last 7 days of activity even though my plan includes 90 days of history.", "gold": "technical", "split": "test"}
+{"input": "We are merging two companies and need to consolidate our two accounts — how do we do that?", "gold": "general", "split": "test"}
+{"input": "Do you offer a sandbox environment for testing integrations before going live?", "gold": "general", "split": "test"}
+{"input": "I'd like to receive my invoices in a different currency.", "gold": "billing", "split": "train"}
+{"input": "The mobile app doesn't sync offline edits when the connection is restored.", "gold": "technical", "split": "train"}
+{"input": "What is your policy on data portability if I decide to leave?", "gold": "general", "split": "train"}
+{"input": "The API returns stale data even after I clear the cache.", "gold": "technical", "split": "train"}
+{"input": "My account shows a credit balance but it wasn't applied to my latest invoice.", "gold": "billing", "split": "test"}

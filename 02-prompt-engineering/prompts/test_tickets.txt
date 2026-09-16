@@ -1,0 +1,39 @@
+# Test Tickets for Prompt Evaluation
+# Difficulty: Easy (1-3), Medium (4-7), Hard (8-10)
+# Format: ticket_text | expected_category
+
+# --- EASY ---
+
+1. "I need a refund for my last payment."
+Expected: billing
+
+2. "The website is showing a 500 error."
+Expected: technical
+
+3. "What is your return policy?"
+Expected: general
+
+# --- MEDIUM ---
+
+4. "My invoice shows a charge for a plan I never upgraded to."
+Expected: billing
+
+5. "The search feature returns no results even though I know items exist in the database."
+Expected: technical
+
+6. "Can you tell me how to update my mailing address on my account?"
+Expected: general
+
+7. "I cancelled my subscription last week but I was still charged today."
+Expected: billing
+
+# --- HARD (ambiguous / cross-category cues) ---
+
+8. "I tried to update my payment method but the page just spins and never saves."
+Expected: technical
+
+9. "I'm locked out of my account after too many failed login attempts — can someone reset it?"
+Expected: technical
+
+10. "I noticed my annual plan renewed at a higher price than advertised on your pricing page — is this a glitch or a policy change?"
+Expected: billing

@@ -1,0 +1,182 @@
+Ablation 1 — n_demos=5, n_candidates=10
+Random seed: 1958915896
+Zero-shot val score:  0.933
+Optimized val score:  0.933
+Improvement:          0.000
+
+Score distribution across 10 candidates:
+  min:  0.667
+  max:  0.933
+  mean: 0.767
+
+── All candidates (ranked) ──────────────────────────────
+
+Rank 1  |  score=0.933
+  Demo 1:
+    input: Can I pay for an annual plan upfront to get a lower rate?
+    gold:  billing
+  Demo 2:
+    input: My webhook endpoint is not receiving any events.
+    gold:  technical
+  Demo 3:
+    input: The search bar returns no results, even for items I know exist.
+    gold:  technical
+  Demo 4:
+    input: My saved filters in the reporting dashboard reset every time I reload the page.
+    gold:  technical
+  Demo 5:
+    input: I'm getting a 'rate limit exceeded' error even though I'm well under my usage quota.
+    gold:  technical
+
+Rank 2  |  score=0.867
+  Demo 1:
+    input: The CSV export always produces an empty file.
+    gold:  technical
+  Demo 2:
+    input: I was charged twice for my subscription this month.
+    gold:  billing
+  Demo 3:
+    input: How do I download a copy of my latest invoice?
+    gold:  billing
+  Demo 4:
+    input: The email template editor freezes whenever I try to insert an image.
+    gold:  technical
+  Demo 5:
+    input: What are your customer support hours on weekends?
+    gold:  general
+
+Rank 3  |  score=0.867
+  Demo 1:
+    input: Is your platform HIPAA compliant?
+    gold:  general
+  Demo 2:
+    input: Two-factor authentication codes are not being delivered to my phone.
+    gold:  technical
+  Demo 3:
+    input: Do you have a native desktop app for Windows?
+    gold:  general
+  Demo 4:
+    input: I was promised a 20% discount during the sales call but it was never applied to my bill.
+    gold:  billing
+  Demo 5:
+    input: Why was I charged a different amount than what the pricing page shows?
+    gold:  billing
+
+Rank 4  |  score=0.800
+  Demo 1:
+    input: My API key stopped working immediately after I regenerated it in the settings panel.
+    gold:  technical
+  Demo 2:
+    input: File uploads freeze at 99% and never complete.
+    gold:  technical
+  Demo 3:
+    input: How do I change the email address associated with my account?
+    gold:  general
+  Demo 4:
+    input: I'm new and would like a quick walkthrough of the main features.
+    gold:  general
+  Demo 5:
+    input: Can I have multiple workspaces under a single login?
+    gold:  general
+
+Rank 5  |  score=0.800
+  Demo 1:
+    input: What file formats does the export feature support?
+    gold:  general
+  Demo 2:
+    input: My saved filters in the reporting dashboard reset every time I reload the page.
+    gold:  technical
+  Demo 3:
+    input: My credit card was declined when my subscription tried to renew.
+    gold:  billing
+  Demo 4:
+    input: File uploads freeze at 99% and never complete.
+    gold:  technical
+  Demo 5:
+    input: Our organization is being charged sales tax but we are tax-exempt — can you fix this?
+    gold:  billing
+
+Rank 6  |  score=0.733
+  Demo 1:
+    input: The app keeps crashing when I try to upload a file larger than 10 MB.
+    gold:  technical
+  Demo 2:
+    input: I was promised a 20% discount during the sales call but it was never applied to my bill.
+    gold:  billing
+  Demo 3:
+    input: Can I have a dedicated account manager for our enterprise team?
+    gold:  general
+  Demo 4:
+    input: I applied a promo code at checkout but the discount wasn't reflected.
+    gold:  billing
+  Demo 5:
+    input: File uploads freeze at 99% and never complete.
+    gold:  technical
+
+Rank 7  |  score=0.667
+  Demo 1:
+    input: I was charged twice for my subscription this month.
+    gold:  billing
+  Demo 2:
+    input: I want to close my account and get a refund for the unused days.
+    gold:  billing
+  Demo 3:
+    input: Can I have a dedicated account manager for our enterprise team?
+    gold:  general
+  Demo 4:
+    input: Can I have multiple workspaces under a single login?
+    gold:  general
+  Demo 5:
+    input: I need to update the billing address on my account.
+    gold:  billing
+
+Rank 8  |  score=0.667
+  Demo 1:
+    input: The email template editor freezes whenever I try to insert an image.
+    gold:  technical
+  Demo 2:
+    input: Why was I charged a different amount than what the pricing page shows?
+    gold:  billing
+  Demo 3:
+    input: I applied a promo code at checkout but the discount wasn't reflected.
+    gold:  billing
+  Demo 4:
+    input: File uploads freeze at 99% and never complete.
+    gold:  technical
+  Demo 5:
+    input: My saved filters in the reporting dashboard reset every time I reload the page.
+    gold:  technical
+
+Rank 9  |  score=0.667
+  Demo 1:
+    input: My subscription renewed at full price even though I was on a promotional rate.
+    gold:  billing
+  Demo 2:
+    input: Can I have a dedicated account manager for our enterprise team?
+    gold:  general
+  Demo 3:
+    input: The app keeps crashing when I try to upload a file larger than 10 MB.
+    gold:  technical
+  Demo 4:
+    input: I received a payment failure notification — what should I do next?
+    gold:  billing
+  Demo 5:
+    input: Push notifications on Android stopped working after I reinstalled the app.
+    gold:  technical
+
+Rank 10  |  score=0.667
+  Demo 1:
+    input: My subscription renewed at full price even though I was on a promotional rate.
+    gold:  billing
+  Demo 2:
+    input: What is your SLA guarantee for enterprise customers?
+    gold:  general
+  Demo 3:
+    input: My saved filters in the reporting dashboard reset every time I reload the page.
+    gold:  technical
+  Demo 4:
+    input: Is there a public status page where I can check for ongoing outages?
+    gold:  general
+  Demo 5:
+    input: I'm being billed for an add-on I never enabled.
+    gold:  billing

@@ -1,0 +1,18 @@
+# Train Tickets for Prompt Development
+# Use these to iterate on prompt design. Once best prompt is chosen, evaluate on test_tickets.txt
+# Difficulty: Easy (1-2), Medium (3-4), Hard (5)
+
+1. "I was double-charged on my credit card for last month's subscription."
+Expected: billing
+
+2. "The app crashes every time I open the settings page on Android."
+Expected: technical
+
+3. "Do you offer student discounts?"
+Expected: general
+
+4. "My promo code says it's expired but it shouldn't expire until next week."
+Expected: billing
+
+5. "I can't log in — the page redirects me back to the login screen after I enter my password."
+Expected: technical

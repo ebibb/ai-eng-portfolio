@@ -1,0 +1,230 @@
+===================================================================
+
+**Zero Shot**
+--------------------------------
+Prompt:
+Classify the following customer support ticket into exactly one of these three categories:
+- billing    — payment, invoices, charges, subscriptions, refunds, promo codes
+- technical  — bugs, errors, crashes, features not working, integrations, login troubles
+- general    — hours, policies, account info, non-urgent questions
+
+Respond with only the category label, nothing else.
+
+Ticket: {{ticket_text}}
+
+Category:
+--------------------------------
+Ticket: I need a refund for my last payment.
+Expected: billing
+Output: billing
+
+Ticket: The website is showing a 500 error.
+Expected: technical
+Output: technical
+
+Ticket: What is your return policy?
+Expected: general
+Output: general
+
+Ticket: My invoice shows a charge for a plan I never upgraded to.
+Expected: billing
+Output: billing
+
+Ticket: The search feature returns no results even though I know items exist in the database.
+Expected: technical
+Output: technical
+
+Ticket: Can you tell me how to update my mailing address on my account?
+Expected: general
+Output: general
+
+Ticket: I cancelled my subscription last week but I was still charged today.
+Expected: billing
+Output: billing
+
+Ticket: I tried to update my payment method but the page just spins and never saves.
+Expected: technical
+Output: technical
+
+Ticket: I'm locked out of my account after too many failed login attempts — can someone reset it?
+Expected: technical
+Output: technical
+
+Ticket: I noticed my annual plan renewed at a higher price than advertised on your pricing page — is this a glitch or a policy change?
+Expected: billing
+Output: billing
+
+--------------------------------
+**Zero Shot Accuracy: 100.00%**
+
+===================================================================
+===================================================================
+
+**Few Shot**
+--------------------------------
+Prompt:
+Classify the following customer support ticket into exactly one of these three categories:
+- billing    — payment, invoices, charges, subscriptions, refunds, promo codes
+- technical  — bugs, errors, crashes, features not working, integrations, login troubles
+- general    — hours, policies, account info, non-urgent questions
+
+Respond with only the category label, nothing else.
+
+Examples:
+
+Ticket: "I was charged twice for my subscription this month."
+Category: billing
+
+Ticket: "The app keeps crashing when I try to upload a file larger than 10 MB."
+Category: technical
+
+Ticket: "What are your customer support hours on weekends?"
+Category: general
+
+---
+
+Ticket: {{ticket_text}}
+
+Category:
+--------------------------------
+Ticket: I need a refund for my last payment.
+Expected: billing
+Output: billing
+
+Ticket: The website is showing a 500 error.
+Expected: technical
+Output: technical
+
+Ticket: What is your return policy?
+Expected: general
+Output: general
+
+Ticket: My invoice shows a charge for a plan I never upgraded to.
+Expected: billing
+Output: billing
+
+Ticket: The search feature returns no results even though I know items exist in the database.
+Expected: technical
+Output: technical
+
+Ticket: Can you tell me how to update my mailing address on my account?
+Expected: general
+Output: general
+
+Ticket: I cancelled my subscription last week but I was still charged today.
+Expected: billing
+Output: billing
+
+Ticket: I tried to update my payment method but the page just spins and never saves.
+Expected: technical
+Output: technical
+
+Ticket: I'm locked out of my account after too many failed login attempts — can someone reset it?
+Expected: technical
+Output: technical
+
+Ticket: I noticed my annual plan renewed at a higher price than advertised on your pricing page — is this a glitch or a policy change?
+Expected: billing
+Output: billing
+
+--------------------------------
+**Few Shot Accuracy: 100.00%**
+
+===================================================================
+===================================================================
+
+**Few Shot Cot**
+--------------------------------
+Prompt:
+Classify the following customer support ticket into exactly one of these three categories:
+- billing    — payment, invoices, charges, subscriptions, refunds, promo codes
+- technical  — bugs, errors, crashes, features not working, integrations, login troubles
+- general    — hours, policies, account info, non-urgent questions
+
+Think step by step before giving the final category. Respond in plain text only — no markdown, no bullet points, no bold or italic formatting.
+
+Examples:
+
+Ticket: "I was charged twice for my subscription this month."
+Reasoning: The customer mentions being charged — this is a payment/billing matter.
+Category: billing
+
+Ticket: "The app keeps crashing when I try to upload a file larger than 10 MB."
+Reasoning: A crash on file upload is a software malfunction, making this a technical issue.
+Category: technical
+
+Ticket: "What are your customer support hours on weekends?"
+Reasoning: This is a general information request about business hours, not billing or technical.
+Category: general
+
+---
+
+Ticket: {{ticket_text}}
+
+Reasoning:
+Category:
+--------------------------------
+Ticket: I need a refund for my last payment.
+Expected: billing
+Output:
+Reasoning: The customer is requesting a refund, which falls under payment-related matters. Refunds are classified as billing issues.
+Category: billing
+
+Ticket: The website is showing a 500 error.
+Expected: technical
+Output:
+Reasoning: A 500 error indicates a server issue, which is a technical problem as it involves a malfunction of the website.
+Category: technical
+
+Ticket: What is your return policy?
+Expected: general
+Output:
+Reasoning: The customer is asking about a policy, which is a general information question and not related to billing or technical issues.
+Category: general
+
+Ticket: My invoice shows a charge for a plan I never upgraded to.
+Expected: billing
+Output:
+Reasoning: The customer is referring to an issue with their invoice and charges, which is related to payment/billing matters.
+Category: billing
+
+Ticket: The search feature returns no results even though I know items exist in the database.
+Expected: technical
+Output:
+Reasoning: The customer is reporting that a feature (the search functionality) is not working as expected. This falls under software functionality issues, which are categorized as technical.
+Category: technical
+
+Ticket: Can you tell me how to update my mailing address on my account?
+Expected: general
+Output:
+Reasoning: The customer is asking about updating their mailing address, which is related to account information and not about billing or technical issues. This falls under general inquiries.
+Category: general
+
+Ticket: I cancelled my subscription last week but I was still charged today.
+Expected: billing
+Output:
+Reasoning: The ticket involves a charge after subscription cancellation, which falls under payment and billing concerns.
+Category: billing
+
+Ticket: I tried to update my payment method but the page just spins and never saves.
+Expected: technical
+Output:
+Reasoning: The customer is attempting to update their payment method, which initially points to a billing matter. However, the issue described is that the page does not save and keeps spinning, indicating a malfunction or error. This makes it a technical issue rather than purely a billing matter.
+Category: technical
+
+Ticket: I'm locked out of my account after too many failed login attempts — can someone reset it?
+Expected: technical
+Output:
+Reasoning: The customer is unable to access their account due to login troubles, which is a technical issue related to account access.
+Category: technical
+
+Ticket: I noticed my annual plan renewed at a higher price than advertised on your pricing page — is this a glitch or a policy change?
+Expected: billing
+Output:
+Reasoning: The ticket mentions a renewal at a higher price, which relates to payment and subscription. While the customer asks if the issue is a glitch or a policy change, the primary concern revolves around billing — the higher price during renewal.
+Category: billing
+
+--------------------------------
+**Few Shot Cot Accuracy: 100.00%**
+
+===================================================================

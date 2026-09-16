@@ -1,0 +1,27 @@
+Classify the following customer support ticket into exactly one of these three categories:
+- billing    — payment, invoices, charges, subscriptions, refunds, promo codes
+- technical  — bugs, errors, crashes, features not working, integrations, login troubles
+- general    — hours, policies, account info, non-urgent questions
+
+Think step by step before giving the final category. Respond in plain text only — no markdown, no bullet points, no bold or italic formatting.
+
+Examples:
+
+Ticket: "I was charged twice for my subscription this month."
+Reasoning: The customer mentions being charged — this is a payment/billing matter.
+Category: billing
+
+Ticket: "The app keeps crashing when I try to upload a file larger than 10 MB."
+Reasoning: A crash on file upload is a software malfunction, making this a technical issue.
+Category: technical
+
+Ticket: "What are your customer support hours on weekends?"
+Reasoning: This is a general information request about business hours, not billing or technical.
+Category: general
+
+---
+
+Ticket: {{ticket_text}}
+
+Reasoning:
+Category:

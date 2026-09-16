@@ -1,0 +1,4 @@
+Ablation 1 — n_demos=0, n_candidates=10
+Val score: 0.933
+
+No demos — zero-shot baseline.

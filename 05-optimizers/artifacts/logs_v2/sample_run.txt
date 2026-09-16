@@ -1,0 +1,99 @@
+=== OPTIMIZER V2 RUN LOG ===
+Generated: 2026-07-06 16:45:12
+
+--- SEED INSTRUCTION ---
+Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.
+
+--- LLM INPUT (Instruction Proposal) ---
+You are an expert prompt engineer. Your job is to improve a task instruction.
+
+Current instruction:
+Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.
+
+Here are some correct examples from the training set:
+- My subscription renewed at full price even though I was on a promotional rate. -> billing
+- The API is returning a 500 error on all POST requests. -> technical
+- Do you have a native desktop app for Windows? -> general
+- My API key stopped working immediately after I regenerated it in the settings panel. -> technical
+- I need to add a purchase order number to my invoices for our accounting team. -> billing
+
+Write 3 improved versions of the instruction. Each version should be:
+- More specific about what distinguishes the categories
+- Clearer about edge cases
+- No longer than 3 sentences
+
+Output a numbered list (1. ... 2. ... 3. ...) with one instruction per line.
+Do not include any other text.
+
+
+--- LLM OUTPUT (Instruction Proposal) ---
+1. Classify the following customer support ticket into one of these categories: "billing" for issues related to payments, subscriptions, or invoices; "technical" for problems or questions about product functionality, bugs, or errors; "general" for inquiries not related to billing or technical issues. If the ticket could fit into multiple categories, choose the most specific one. Respond with only the category label.
+
+2. Classify the following customer support ticket by selecting one category: "billing" for concerns about charges, pricing, or account payments; "technical" for issues involving system errors, product features, or troubleshooting; "general" for all other inquiries, such as product availability or general questions. When in doubt, prioritize "billing" over "general" and "technical" over "general" if there's overlap. Provide only the category name as your response.
+
+3. Assign the following customer support ticket to one category: "billing" if it's about payment, subscription plans, or financial adjustments; "technical" if it involves errors, bugs, or using the product; "general" if it pertains to other non-technical, non-billing questions. Choose the single best category even if the ticket seems relevant to more than one. Respond with just the category label.
+
+--- V2 OPTIMIZED OUTPUT ---
+Val score: 1.000
+Instruction: Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.
+Demos (3):
+  [1] "My webhook endpoint is not receiving any events." -> technical
+  [2] "My Slack integration stopped syncing after your latest update." -> technical
+  [3] "Two-factor authentication codes are not being delivered to my phone." -> technical
+
+=== OPTIMIZER V1 COMPARISON ===
+
+--- V1 SEED INSTRUCTION ---
+Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.
+
+--- V1 CANDIDATE PROMPTS ---
+
+Candidate 1:
+Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.
+---
+Examples:
+Ticket: "Do you have a native desktop app for Windows?"
+Category: "general"
+Ticket: "I canceled my account but was charged again this month."
+Category: "billing"
+Ticket: "Can I have multiple workspaces under a single login?"
+Category: "general"
+---
+Ticket: "[input]"
+Category:
+
+Candidate 2:
+Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.
+---
+Examples:
+Ticket: "I canceled my account but was charged again this month."
+Category: "billing"
+Ticket: "I accidentally purchased the wrong plan — can I switch and get a partial refund?"
+Category: "billing"
+Ticket: "My credit card was declined when my subscription tried to renew."
+Category: "billing"
+---
+Ticket: "[input]"
+Category:
+
+Candidate 3:
+Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.
+---
+Examples:
+Ticket: "Our organization is being charged sales tax but we are tax-exempt — can you fix this?"
+Category: "billing"
+Ticket: "Can I pay for an annual plan upfront to get a lower rate?"
+Category: "billing"
+Ticket: "The CSV export always produces an empty file."
+Category: "technical"
+---
+Ticket: "[input]"
+Category:
+
+--- V1 OPTIMIZED OUTPUT ---
+Val score: 0.933
+Instruction: Classify the following customer support ticket into exactly one of three categories: billing, technical, or general. Respond with only the category label.
+Demos (3):
+  [1] "Do you have a native desktop app for Windows?" -> general
+  [2] "I canceled my account but was charged again this month." -> billing
+  [3] "Can I have multiple workspaces under a single login?" -> general

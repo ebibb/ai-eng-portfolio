@@ -1,0 +1,67 @@
+Ablation 1 — n_demos=3, n_candidates=5
+Random seed: 1739792740
+Zero-shot val score:  0.933
+Optimized val score:  1.000
+Improvement:          0.067
+
+Score distribution across 5 candidates:
+  min:  0.733
+  max:  1.000
+  mean: 0.880
+
+── All candidates (ranked) ──────────────────────────────
+
+Rank 1  |  score=1.000
+  Demo 1:
+    input: The Zapier zap I configured isn't triggering at all.
+    gold:  technical
+  Demo 2:
+    input: My webhook endpoint is not receiving any events.
+    gold:  technical
+  Demo 3:
+    input: I get a 'connection timeout' every time I try to sync my data.
+    gold:  technical
+
+Rank 2  |  score=0.933
+  Demo 1:
+    input: The email template editor freezes whenever I try to insert an image.
+    gold:  technical
+  Demo 2:
+    input: How do I remove a saved credit card from my account?
+    gold:  billing
+  Demo 3:
+    input: How do I transfer workspace ownership to another user?
+    gold:  general
+
+Rank 3  |  score=0.867
+  Demo 1:
+    input: I want to close my account and get a refund for the unused days.
+    gold:  billing
+  Demo 2:
+    input: Can I get a refund for last month's payment?
+    gold:  billing
+  Demo 3:
+    input: Do you have a native desktop app for Windows?
+    gold:  general
+
+Rank 4  |  score=0.867
+  Demo 1:
+    input: My free trial ended and I was automatically charged without any warning.
+    gold:  billing
+  Demo 2:
+    input: The email template editor freezes whenever I try to insert an image.
+    gold:  technical
+  Demo 3:
+    input: Is your platform HIPAA compliant?
+    gold:  general
+
+Rank 5  |  score=0.733
+  Demo 1:
+    input: The CSV export always produces an empty file.
+    gold:  technical
+  Demo 2:
+    input: I'm new and would like a quick walkthrough of the main features.
+    gold:  general
+  Demo 3:
+    input: I was promised a 20% discount during the sales call but it was never applied to my bill.
+    gold:  billing

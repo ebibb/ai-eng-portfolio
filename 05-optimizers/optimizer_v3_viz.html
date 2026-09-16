@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>optimizer_v3 — Architecture Visualizer</title>
+<style>
+/* ─── Reset & Base ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { display: flex; height: 100vh; overflow: hidden;
+       font-family: system-ui, -apple-system, sans-serif;
+       font-size: 14px; background: #f1f5f9; color: #1e293b; }
+
+/* ─── Sidebar ───────────────────────────────────────────────────── */
+#sidebar {
+  width: 280px; min-width: 260px; flex-shrink: 0;
+  height: 100vh; overflow-y: auto;
+  background: #0f172a; color: #e2e8f0;
+  padding: 18px 16px 24px;
+  border-right: 1px solid #1e293b;
+}
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+
+#sidebar h2 { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+              color: #64748b; margin-bottom: 14px; }
+#sidebar hr { border: none; border-top: 1px solid #1e293b; margin: 14px 0; }
+
+/* Derived chip */
+#derived-display {
+  background: #1e293b; border-radius: 6px; padding: 9px 12px;
+  margin-bottom: 16px; font-size: 0.8rem; color: #a5b4fc; line-height: 1.5;
+}
+#derived-display .chip-label { color: #64748b; font-size: 0.7rem; margin-bottom: 2px; }
+#n-candidates-val { font-weight: 700; font-size: 0.9rem; }
+
+/* Controls */
+.ctrl-group { margin-bottom: 13px; }
+.ctrl-group .ctrl-label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 0.75rem; color: #94a3b8; margin-bottom: 4px;
+}
+.ctrl-group .ctrl-label code { color: #c4b5fd; font-size: 0.8rem; }
+.ctrl-row { display: flex; align-items: center; gap: 8px; }
+.ctrl-row input[type=range] { flex: 1; accent-color: #6366f1; cursor: pointer; }
+.ctrl-row input[type=number] {
+  width: 62px; background: #1e293b; color: #e2e8f0;
+  border: 1px solid #334155; border-radius: 4px;
+  padding: 3px 6px; font-size: 0.78rem; text-align: right;
+}
+.ctrl-row input[type=number]:focus { outline: 1px solid #6366f1; }
+.constraint-warn {
+  font-size: 0.68rem; color: #fb923c; margin-top: 3px; display: none;
+}
+
+/* BO Scrubber */
+#bo-scrubber { background: #1e293b; border-radius: 6px; padding: 10px 12px; }
+#bo-scrubber .scrubber-title {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.75rem; color: #94a3b8; margin-bottom: 6px;
+}
+#bo-scrubber .scrubber-title strong { color: #38bdf8; font-size: 0.85rem; }
+#bo-scrubber input[type=range] { width: 100%; accent-color: #38bdf8; }
+.scrubber-ann { font-size: 0.72rem; color: #64748b; margin-top: 6px; line-height: 1.6; }
+.scrubber-ann span { color: #38bdf8; font-weight: 600; }
+
+/* ─── Main Panel ────────────────────────────────────────────────── */
+#main { flex: 1; height: 100vh; overflow-y: auto; padding: 24px 28px 60px; }
+#main::-webkit-scrollbar { width: 6px; }
+#main::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+/* ─── Phase Sections ────────────────────────────────────────────── */
+.phase {
+  border-radius: 10px; margin-bottom: 28px;
+  border: 1.5px solid var(--phase-color);
+  overflow: hidden;
+}
+.phase-propose  { --phase-color: #6366f1; --phase-bg: #eef2ff; --phase-hdr: #4f46e5; }
+.phase-evaluate { --phase-color: #0ea5e9; --phase-bg: #f0f9ff; --phase-hdr: #0284c7; }
+.phase-select   { --phase-color: #10b981; --phase-bg: #ecfdf5; --phase-hdr: #059669; }
+
+.phase-header {
+  background: var(--phase-hdr);
+  color: white;
+  padding: 10px 20px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  position: sticky; top: 0; z-index: 10;
+}
+
+.phase-body { background: var(--phase-bg); padding: 16px 20px 20px; }
+
+/* ─── Tree Layout ───────────────────────────────────────────────── */
+.stage-tree { padding-left: 12px; }
+
+.stage {
+  position: relative; margin: 14px 0;
+  padding-left: 22px;
+}
+.stage::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--phase-color); opacity: 0.35;
+}
+.stage::after {
+  content: ''; position: absolute;
+  left: 0; top: 20px; width: 16px; height: 2px;
+  background: var(--phase-color); opacity: 0.35;
+}
+.stage-title {
+  font-weight: 700; font-size: 0.88rem;
+  color: var(--phase-hdr); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.stage-title .badge {
+  background: var(--phase-hdr); color: white;
+  font-size: 0.65rem; padding: 1px 6px; border-radius: 10px;
+  font-weight: 600; letter-spacing: 0.05em;
+}
+
+.leaf-card {
+  background: white; border-radius: 7px;
+  border: 1px solid #e2e8f0;
+  padding: 10px 14px; margin: 7px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  font-size: 0.82rem; line-height: 1.6;
+}
+.leaf-card code { background: #f1f5f9; border-radius: 3px;
+                  padding: 1px 5px; font-size: 0.8rem; color: #1e293b; }
+
+.sub-leaf {
+  margin: 6px 0 0 12px; padding-left: 12px;
+  border-left: 2px solid #e2e8f0;
+  color: #475569; font-size: 0.8rem; line-height: 1.5;
+}
+.sub-leaf code { background: #f8fafc; }
+
+.sub-stage {
+  position: relative; padding-left: 18px; margin: 10px 0;
+}
+.sub-stage::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 1.5px;
+  background: #94a3b8; opacity: 0.5;
+}
+.sub-stage::after {
+  content: ''; position: absolute;
+  left: 0; top: 18px; width: 12px; height: 1.5px;
+  background: #94a3b8; opacity: 0.5;
+}
+.sub-stage-title {
+  font-weight: 600; font-size: 0.8rem; color: #475569;
+  margin-bottom: 6px;
+}
+
+/* ─── Matrix Boxes ──────────────────────────────────────────────── */
+.mat-wrap {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  align-items: flex-start; margin-top: 10px;
+}
+.matrix-box {
+  display: inline-flex; align-items: stretch;
+  border-radius: 6px; min-height: 70px;
+  font-size: 0.75rem;
+}
+.matrix-box.purple { border: 2px solid #8b5cf6; }
+.matrix-box.green  { border: 2px solid #10b981; }
+.matrix-box.teal   { border: 2px solid #0d9488; }
+.matrix-box.orange { border: 2px solid #f97316; }
+
+.mat-row-label {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 6px 5px; gap: 3px;
+  border-radius: 4px 0 0 4px; min-width: 36px;
+}
+.matrix-box.purple .mat-row-label { background: #ede9fe; }
+.matrix-box.green  .mat-row-label { background: #d1fae5; }
+.matrix-box.teal   .mat-row-label { background: #ccfbf1; }
+.matrix-box.orange .mat-row-label { background: #ffedd5; }
+
+.mat-row-label .rot-val {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  font-weight: 700; color: #1e293b; font-size: 0.82rem;
+}
+.mat-row-label .rot-ann {
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  color: #9ca3af; font-size: 0.62rem; white-space: nowrap;
+}
+.mat-body {
+  padding: 8px 12px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  background: white; border-radius: 0 4px 4px 0; min-width: 90px;
+}
+.mat-col-label {
+  font-size: 0.72rem; font-weight: 600; color: #374151;
+  border-bottom: 1px dashed #d1d5db;
+  padding-bottom: 3px; width: 100%; text-align: center;
+}
+.mat-col-ann { font-size: 0.6rem; color: #9ca3af; text-align: center; }
+.mat-name { font-weight: 800; font-size: 0.9rem; color: #111827; }
+.mat-shape { font-size: 0.72rem; color: #6b7280; font-family: monospace; }
+
+.matrix-box.dim-zero { opacity: 0.35; }
+
+/* ─── Formula Blocks ────────────────────────────────────────────── */
+.formula-block {
+  background: #f8fafc; border-left: 3px solid #94a3b8;
+  border-radius: 0 5px 5px 0; padding: 7px 12px; margin: 8px 0;
+  font-size: 0.8rem;
+}
+.formula-eq { font-family: 'Georgia', serif; font-size: 0.88rem;
+              color: #1e293b; line-height: 1.5; }
+.formula-ann { font-size: 0.72rem; color: #64748b; margin-top: 3px; }
+.formula-ann .live { color: #6366f1; font-weight: 600; }
+
+/* ─── Iter Context Box ──────────────────────────────────────────── */
+.iter-context {
+  background: #f0f9ff; border: 1.5px dashed #38bdf8;
+  border-radius: 6px; padding: 9px 13px; margin: 8px 0;
+  font-size: 0.78rem; color: #0369a1; line-height: 1.7; font-family: monospace;
+}
+.iter-context .ic-live { color: #0284c7; font-weight: 700; }
+
+/* ─── Select Summary ────────────────────────────────────────────── */
+.select-summary {
+  background: #d1fae5; border-radius: 7px; padding: 12px 16px;
+  font-size: 0.82rem; line-height: 1.7; border: 1px solid #6ee7b7;
+}
+.select-summary .big { font-size: 0.95rem; font-weight: 700; color: #065f46; }
+
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════════
+     SIDEBAR
+═══════════════════════════════════════════════════════════════════ -->
+<div id="sidebar">
+  <h2>Hyperparameters</h2>
+
+  <div id="derived-display">
+    <div class="chip-label">Candidate Pool Size</div>
+    <div id="n-candidates-val">N = (3+1) × 5 = 20</div>
+  </div>
+
+  <!-- Integer controls -->
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>n_instructions</span><code id="v-n_instructions">3</code></div>
+    <div class="ctrl-row">
+      <input type="range" data-key="n_instructions" min="1" max="10" step="1" value="3">
+      <input type="number" data-key="n_instructions" min="1" max="10" step="1" value="3">
+    </div>
+  </div>
+
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>n_demo_subsets</span><code id="v-n_demo_subsets">5</code></div>
+    <div class="ctrl-row">
+      <input type="range" data-key="n_demo_subsets" min="1" max="20" step="1" value="5">
+      <input type="number" data-key="n_demo_subsets" min="1" max="20" step="1" value="5">
+    </div>
+  </div>
+
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>n_demos</span><code id="v-n_demos">3</code></div>
+    <div class="ctrl-row">
+      <input type="range" data-key="n_demos" min="1" max="10" step="1" value="3">
+      <input type="number" data-key="n_demos" min="1" max="10" step="1" value="3">
+    </div>
+  </div>
+
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>n_initial</span><code id="v-n_initial">4</code></div>
+    <div class="ctrl-row">
+      <input type="range" data-key="n_initial" min="1" max="20" step="1" value="4">
+      <input type="number" data-key="n_initial" min="1" max="20" step="1" value="4">
+    </div>
+    <div class="constraint-warn" id="warn-n_initial">Clamped to N</div>
+  </div>
+
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>n_iterations</span><code id="v-n_iterations">10</code></div>
+    <div class="ctrl-row">
+      <input type="range" data-key="n_iterations" min="1" max="16" step="1" value="10">
+      <input type="number" data-key="n_iterations" min="1" max="16" step="1" value="10">
+    </div>
+    <div class="constraint-warn" id="warn-n_iterations">Clamped to N − n_initial</div>
+  </div>
+
+  <hr>
+
+  <!-- Float controls -->
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>length_scale (l)</span><code id="v-length_scale">1.00</code></div>
+    <div class="ctrl-row">
+      <input type="range" data-key="length_scale" min="0.01" max="10" step="0.01" value="1.0">
+      <input type="number" data-key="length_scale" min="0.01" max="10" step="0.01" value="1.0">
+    </div>
+  </div>
+
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>signal_var (σ²)</span><code id="v-signal_var">1.00</code></div>
+    <div class="ctrl-row">
+      <input type="range" data-key="signal_var" min="0.01" max="10" step="0.01" value="1.0">
+      <input type="number" data-key="signal_var" min="0.01" max="10" step="0.01" value="1.0">
+    </div>
+  </div>
+
+  <div class="ctrl-group">
+    <div class="ctrl-label"><span>noise_var (σ²_n)</span><code id="v-noise_var">0.100</code></div>
+    <div class="ctrl-row">
+      <input type="range" data-key="noise_var" min="0.001" max="1" step="0.001" value="0.1">
+      <input type="number" data-key="noise_var" min="0.001" max="1" step="0.001" value="0.1">
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- BO Scrubber -->
+  <div id="bo-scrubber">
+    <div class="scrubber-title">
+      <span>BO Iteration</span>
+      <strong id="t-display">t = 1</strong>
+    </div>
+    <input type="range" id="t-slider" data-key="t" min="1" max="10" step="1" value="1">
+    <div class="scrubber-ann">
+      n_obs = n_initial + (t−1) = <span id="sc-n_obs">4</span><br>
+      n_rem = N − n_obs = <span id="sc-n_rem">16</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════
+     MAIN PANEL
+═══════════════════════════════════════════════════════════════════ -->
+<div id="main">
+
+  <!-- ── PROPOSE ─────────────────────────────────────────────────── -->
+  <section class="phase phase-propose">
+    <div class="phase-header">PROPOSE</div>
+    <div class="phase-body">
+      <div class="stage-tree">
+
+        <!-- Stage 1: Bootstrap -->
+        <div class="stage">
+          <div class="stage-title">Bootstrap Demo Pool</div>
+          <div class="leaf-card">
+            <code>zero_shot_program(instruction)</code> → builds a callable that calls the LLM with no demonstrations
+          </div>
+          <div class="leaf-card">
+            <code>bootstrap(program, train)</code> → runs the zero-shot program on <code>train</code>; keeps only examples where <code>metric(pred, gold) = 1.0</code>
+            <div class="sub-leaf">Output: <code>demo_pool</code> — list of dicts <code>{input, gold}</code></div>
+          </div>
+        </div>
+
+        <!-- Stage 2: Instruction Candidates -->
+        <div class="stage">
+          <div class="stage-title">Generate Instruction Candidates</div>
+          <div class="leaf-card">
+            <code>propose_instruction_candidates(seed, demo_pool, n_instructions)</code>
+            <div class="sub-leaf">→ <code>llm.generate(INSTRUCTION_REWRITE_PROMPT, temperature=0.7)</code></div>
+            <div class="sub-leaf">→ parse numbered list from response</div>
+            <div class="sub-leaf">Output: <b id="ann-n-inst-plus1">4</b> strings (seed + <b id="ann-n-inst">3</b> rewrites)</div>
+          </div>
+        </div>
+
+        <!-- Stage 3: Cross-product -->
+        <div class="stage">
+          <div class="stage-title">Cross-Product → Candidate Pool</div>
+          <div class="leaf-card">
+            <code>propose_candidates_v2(demo_pool, instructions, n_demo_subsets, n_demos)</code>
+            <div class="sub-leaf"><code>random.sample(demo_pool, n_demos)</code> for each instruction × subset</div>
+            <div class="sub-leaf">
+              Pool size: (<b id="ann-n-inst-plus1b">4</b> instructions) × (<b id="ann-n-subsets">5</b> subsets)
+              = <b id="ann-N-cand">20</b> candidates, each with <b id="ann-n-demos">3</b> demos
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 4: Embed Pool -->
+        <div class="stage">
+          <div class="stage-title">Embed Pool</div>
+          <div class="leaf-card">
+            <code>candidate_to_text(c)</code> → <code>"instruction | input→gold | input→gold …"</code>
+          </div>
+          <div class="leaf-card">
+            <code>embed_candidate(c)</code> → <code>candidate_to_text</code> → Azure <code>text-embedding-3-small</code> API → <code>np.array(1536,)</code>
+            <div class="sub-leaf">Results cached in <code>_embed_cache</code> (keyed by text)</div>
+          </div>
+          <div class="leaf-card">
+            <code>embed_pool(candidates)</code> → <code>embed_candidate()</code> for each → <code>np.array(embeddings)</code>
+            <div class="mat-wrap">
+              <div class="matrix-box purple" id="box-X-all">
+                <div class="mat-row-label">
+                  <div class="rot-val" id="Xall-rows">20</div>
+                  <div class="rot-ann" id="Xall-rows-ann">(n_inst+1)×n_sub</div>
+                </div>
+                <div class="mat-body">
+                  <div class="mat-col-label">1536</div>
+                  <div class="mat-col-ann">embed dim (fixed)</div>
+                  <div class="mat-name">X_all</div>
+                  <div class="mat-shape" id="Xall-shape">20 × 1536</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /stage-tree -->
+    </div><!-- /phase-body -->
+  </section>
+
+  <!-- ── EVALUATE ────────────────────────────────────────────────── -->
+  <section class="phase phase-evaluate">
+    <div class="phase-header">EVALUATE</div>
+    <div class="phase-body">
+      <div class="stage-tree">
+
+        <!-- Stage 5: Warm Start -->
+        <div class="stage">
+          <div class="stage-title">Warm Start</div>
+          <div class="leaf-card">
+            <code>warm_start(candidates, X_all, val, n_initial)</code>
+            <div class="sub-leaf"><code>random.sample</code> → pick <b id="ann-n-init">4</b> candidate indices</div>
+            <div class="sub-leaf"><code>evaluate_candidate(c, val)</code> × <b id="ann-n-init2">4</b> → mean val accuracy each</div>
+            <div class="mat-wrap">
+              <div class="matrix-box purple" id="box-X-obs-warm">
+                <div class="mat-row-label">
+                  <div class="rot-val" id="Xow-rows">4</div>
+                  <div class="rot-ann">n_initial</div>
+                </div>
+                <div class="mat-body">
+                  <div class="mat-col-label">1536</div>
+                  <div class="mat-col-ann">embed dim</div>
+                  <div class="mat-name">X_observed</div>
+                  <div class="mat-shape" id="Xow-shape">4 × 1536</div>
+                </div>
+              </div>
+              <div class="matrix-box green" id="box-y-obs-warm">
+                <div class="mat-row-label">
+                  <div class="rot-val" id="yow-rows">4</div>
+                  <div class="rot-ann">n_initial</div>
+                </div>
+                <div class="mat-body">
+                  <div class="mat-col-label">1</div>
+                  <div class="mat-col-ann">val accuracy</div>
+                  <div class="mat-name">y_observed</div>
+                  <div class="mat-shape" id="yow-shape">4 × 1</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stage 6: BO Iteration Loop -->
+        <div class="stage">
+          <div class="stage-title">
+            BO Iteration Loop
+            <span class="badge" id="bo-badge">t = 1 of 10</span>
+          </div>
+
+          <div class="iter-context">
+            n_obs = n_initial + (t−1) = <span class="ic-live" id="ic-n_obs">4</span>
+            &nbsp;·&nbsp;
+            n_rem = N − n_obs = <span class="ic-live" id="ic-n_rem">16</span>
+          </div>
+
+          <!-- Sub-stage: Fit Surrogate -->
+          <div class="sub-stage">
+            <div class="sub-stage-title">Fit Surrogate — <code>gp_fit(X_obs, y_obs, length_scale, signal_var, noise_var)</code></div>
+            <div class="leaf-card">
+              <b>RBF Kernel</b>
+              <div class="formula-block">
+                <div class="formula-eq">k(x₁,x₂) = σ² · exp(−‖x₁−x₂‖² / 2l²)</div>
+                <div class="formula-ann">σ² = <span class="live" id="fa-sig">1.0</span>, l = <span class="live" id="fa-ls">1.0</span></div>
+              </div>
+              <div class="sub-leaf"><code>covariance_matrix(X_obs, X_obs)</code> — pairwise RBF over all <span id="fa-nobs1">4</span> observed embeddings</div>
+              <div class="mat-wrap">
+                <div class="matrix-box teal" id="box-K">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="K-rows">4</div>
+                    <div class="rot-ann" id="K-rows-ann">n_obs</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label" id="K-cols">4</div>
+                    <div class="mat-col-ann">n_obs</div>
+                    <div class="mat-name">K</div>
+                    <div class="mat-shape" id="K-shape">4 × 4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="leaf-card">
+              <b>Add observation noise</b>
+              <div class="formula-block">
+                <div class="formula-eq">K_y = K + σ²_n · I</div>
+                <div class="formula-ann">σ²_n = <span class="live" id="fa-nv">0.1</span> &nbsp;·&nbsp; shape: <span class="live" id="fa-Ky-shape">4 × 4</span></div>
+              </div>
+              <div class="mat-wrap">
+                <div class="matrix-box teal" id="box-Ky">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="Ky-rows">4</div>
+                    <div class="rot-ann">n_obs</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label" id="Ky-cols">4</div>
+                    <div class="mat-col-ann">n_obs</div>
+                    <div class="mat-name">K_y</div>
+                    <div class="mat-shape" id="Ky-shape">4 × 4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="leaf-card">
+              <b>Cholesky decomposition</b>
+              <div class="formula-block">
+                <div class="formula-eq">L = cholesky(K_y) &nbsp;&nbsp; [numpy.linalg.cholesky]</div>
+                <div class="formula-ann">L is <span class="live" id="fa-L-shape">4 × 4</span> lower-triangular</div>
+              </div>
+              <div class="mat-wrap">
+                <div class="matrix-box teal" id="box-L">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="L-rows">4</div>
+                    <div class="rot-ann">n_obs</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label" id="L-cols">4</div>
+                    <div class="mat-col-ann">n_obs</div>
+                    <div class="mat-name">L</div>
+                    <div class="mat-shape" id="L-shape">4 × 4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="leaf-card">
+              <b>Solve for alpha</b>
+              <div class="formula-block">
+                <div class="formula-eq">α = L⁻ᵀ (L⁻¹ y) &nbsp;&nbsp; [two triangular solves]</div>
+                <div class="formula-ann">α shape: <span class="live" id="fa-alpha-shape">(4,)</span></div>
+              </div>
+              <div class="mat-wrap">
+                <div class="matrix-box orange" id="box-alpha">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="alpha-rows">4</div>
+                    <div class="rot-ann">n_obs</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label">1</div>
+                    <div class="mat-col-ann">GP weights</div>
+                    <div class="mat-name">α (alpha)</div>
+                    <div class="mat-shape" id="alpha-shape">4 × 1</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /sub-stage fit -->
+
+          <!-- Sub-stage: Acquire Next -->
+          <div class="sub-stage">
+            <div class="sub-stage-title">Acquire Next — <code>gp_predict</code> + <code>expected_improvement</code></div>
+            <div class="leaf-card">
+              <b>Cross-covariance</b>
+              <div class="formula-block">
+                <div class="formula-eq">k★ = K(X_rem, X_obs) &nbsp;&nbsp; [covariance_matrix]</div>
+                <div class="formula-ann">shape: <span class="live" id="fa-kstar-shape">16 × 4</span></div>
+              </div>
+              <div class="mat-wrap">
+                <div class="matrix-box purple" id="box-kstar">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="kstar-rows">16</div>
+                    <div class="rot-ann" id="kstar-rows-ann">n_rem</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label" id="kstar-cols">4</div>
+                    <div class="mat-col-ann">n_obs</div>
+                    <div class="mat-name">k★</div>
+                    <div class="mat-shape" id="kstar-shape">16 × 4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="leaf-card">
+              <b>Posterior mean</b>
+              <div class="formula-block">
+                <div class="formula-eq">μ = k★ · α</div>
+                <div class="formula-ann">(<span class="live" id="fa-kstar-r">16</span> × <span class="live" id="fa-kstar-c">4</span>) · (<span class="live" id="fa-alpha-r">4</span>,) → (<span class="live" id="fa-mean-shape">16</span>,)</div>
+              </div>
+              <div class="mat-wrap">
+                <div class="matrix-box green" id="box-mean">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="mean-rows">16</div>
+                    <div class="rot-ann">n_rem</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label">1</div>
+                    <div class="mat-col-ann">predicted acc</div>
+                    <div class="mat-name">μ (mean)</div>
+                    <div class="mat-shape" id="mean-shape">16 × 1</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="leaf-card">
+              <b>Posterior variance</b>
+              <div class="formula-block">
+                <div class="formula-eq">v = L⁻¹ k★ᵀ &nbsp;&nbsp; [forward solve]</div>
+                <div class="formula-ann">v shape: (<span class="live" id="fa-v-r">4</span> × <span class="live" id="fa-v-c">16</span>)</div>
+              </div>
+              <div class="formula-block">
+                <div class="formula-eq">var = σ² − Σ v² &nbsp; (axis=0) &nbsp;&nbsp; [posterior variance shortcut]</div>
+                <div class="formula-ann">σ² = <span class="live" id="fa-sig2">1.0</span> &nbsp;·&nbsp; var clipped to 0, then sqrt → std shape: (<span class="live" id="fa-std-shape">16</span>,)</div>
+              </div>
+              <div class="mat-wrap">
+                <div class="matrix-box green" id="box-std">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="std-rows">16</div>
+                    <div class="rot-ann">n_rem</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label">1</div>
+                    <div class="mat-col-ann">uncertainty</div>
+                    <div class="mat-name">σ (std)</div>
+                    <div class="mat-shape" id="std-shape">16 × 1</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="leaf-card">
+              <b>Expected Improvement</b>
+              <div class="formula-block">
+                <div class="formula-eq">Z = (μ − f★ − ξ) / max(σ, ε) &nbsp;&nbsp; [ξ = 0.01]</div>
+                <div class="formula-ann">Z shape: (<span class="live" id="fa-z-shape">16</span>,) &nbsp;·&nbsp; Φ(Z) = 0.5·(1 + erf(Z/√2)), &nbsp; φ(Z) = exp(−Z²/2)/√(2π)</div>
+              </div>
+              <div class="formula-block">
+                <div class="formula-eq">EI = (μ − f★ − ξ)·Φ(Z) + σ·φ(Z)</div>
+                <div class="formula-ann">EI shape: (<span class="live" id="fa-ei-shape">16</span>,)</div>
+              </div>
+              <div class="mat-wrap">
+                <div class="matrix-box green" id="box-z">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="z-rows">16</div>
+                    <div class="rot-ann">n_rem</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label">1</div>
+                    <div class="mat-col-ann">standardised imp</div>
+                    <div class="mat-name">Z</div>
+                    <div class="mat-shape" id="z-shape">16 × 1</div>
+                  </div>
+                </div>
+                <div class="matrix-box green" id="box-ei">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="ei-rows">16</div>
+                    <div class="rot-ann">n_rem</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label">1</div>
+                    <div class="mat-col-ann">acquisition score</div>
+                    <div class="mat-name">EI</div>
+                    <div class="mat-shape" id="ei-shape">16 × 1</div>
+                  </div>
+                </div>
+              </div>
+              <div class="sub-leaf">
+                <code>select_next_by_ei(remaining, X_rem, gp_state, best)</code> → <code>argmax(EI)</code> → chosen candidate + index
+              </div>
+            </div>
+          </div><!-- /sub-stage acquire -->
+
+          <!-- Sub-stage: Score & Update -->
+          <div class="sub-stage">
+            <div class="sub-stage-title">Score &amp; Update</div>
+            <div class="leaf-card">
+              <code>evaluate_candidate(chosen, val)</code> → score (0.0–1.0)
+              <div class="sub-leaf"><code>X_obs = np.vstack([X_obs, x_chosen])</code> — grows by 1 row</div>
+              <div class="sub-leaf"><code>y_obs = np.append(y_obs, score)</code> — grows by 1</div>
+              <div class="sub-leaf">if score &gt; best_score: update <code>best_candidate</code>, <code>best_score</code></div>
+              <div class="mat-wrap">
+                <div class="matrix-box purple" id="box-X-obs-bo">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="Xbo-rows">4</div>
+                    <div class="rot-ann" id="Xbo-rows-ann">n_obs</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label">1536</div>
+                    <div class="mat-col-ann">embed dim</div>
+                    <div class="mat-name">X_obs</div>
+                    <div class="mat-shape" id="Xbo-shape">4 × 1536</div>
+                  </div>
+                </div>
+                <div class="matrix-box green" id="box-y-obs-bo">
+                  <div class="mat-row-label">
+                    <div class="rot-val" id="ybo-rows">4</div>
+                    <div class="rot-ann">n_obs</div>
+                  </div>
+                  <div class="mat-body">
+                    <div class="mat-col-label">1</div>
+                    <div class="mat-col-ann">val accuracy</div>
+                    <div class="mat-name">y_obs</div>
+                    <div class="mat-shape" id="ybo-shape">4 × 1</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /sub-stage score -->
+
+        </div><!-- /stage BO loop -->
+
+      </div><!-- /stage-tree -->
+    </div>
+  </section>
+
+  <!-- ── SELECT ──────────────────────────────────────────────────── -->
+  <section class="phase phase-select">
+    <div class="phase-header">SELECT</div>
+    <div class="phase-body">
+      <div class="stage-tree">
+        <div class="stage">
+          <div class="stage-title">Track &amp; Return Best</div>
+          <div class="leaf-card">
+            <code>best_v3_index = np.argmax(y_observed)</code> — over all warm-start + BO evaluations
+            <div class="sub-leaf">return <code>(best_candidate, best_score)</code></div>
+          </div>
+          <div class="select-summary">
+            <div class="big">Total candidates evaluated: <span id="sel-total">14</span> of <span id="sel-N">20</span></div>
+            <div>Warm start: <span id="sel-warm">4</span> &nbsp;·&nbsp; BO iterations: <span id="sel-iters">10</span></div>
+            <div>Candidates skipped by GP: <span id="sel-saved">6</span> (each would have required a full val-set LLM pass)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /main -->
+
+<!-- ════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════════════ -->
+<script>
+// ── State ──────────────────────────────────────────────────────────
+const STATE = {
+  n_instructions: 3,
+  n_demo_subsets: 5,
+  n_demos: 3,
+  n_initial: 4,
+  n_iterations: 10,
+  length_scale: 1.0,
+  signal_var: 1.0,
+  noise_var: 0.1,
+  t: 1,
+};
+
+// ── Derived Dims ───────────────────────────────────────────────────
+function computeDims(s) {
+  const N    = (s.n_instructions + 1) * s.n_demo_subsets;
+  const t    = s.t;
+  const n_obs = s.n_initial + (t - 1);
+  const n_rem = Math.max(0, N - n_obs);
+  return { N, n_obs, n_rem };
+}
+
+// ── Constraint enforcement ─────────────────────────────────────────
+function enforceConstraints() {
+  const N = (STATE.n_instructions + 1) * STATE.n_demo_subsets;
+  let clamped_ni = false, clamped_nit = false;
+
+  if (STATE.n_initial > N) { STATE.n_initial = N; clamped_ni = true; }
+  const maxIter = Math.max(1, N - STATE.n_initial);
+  if (STATE.n_iterations > maxIter) { STATE.n_iterations = maxIter; clamped_nit = true; }
+  if (STATE.t > STATE.n_iterations) STATE.t = STATE.n_iterations;
+  if (STATE.t < 1) STATE.t = 1;
+
+  // Update slider/number max attributes
+  ['range','number'].forEach(type => {
+    document.querySelectorAll(`input[type=${type}][data-key="n_initial"]`)
+      .forEach(el => { el.max = N; });
+    document.querySelectorAll(`input[type=${type}][data-key="n_iterations"]`)
+      .forEach(el => { el.max = maxIter; });
+  });
+  const tSlider = document.getElementById('t-slider');
+  tSlider.max = STATE.n_iterations;
+
+  document.getElementById('warn-n_initial').style.display = clamped_ni ? 'block' : 'none';
+  document.getElementById('warn-n_iterations').style.display = clamped_nit ? 'block' : 'none';
+}
+
+// ── Sync all inputs from STATE ─────────────────────────────────────
+function syncAllInputsFromState() {
+  Object.entries(STATE).forEach(([key, val]) => {
+    document.querySelectorAll(`[data-key="${key}"]`).forEach(el => {
+      if (parseFloat(el.value) !== val) el.value = val;
+    });
+  });
+}
+
+// ── Render ─────────────────────────────────────────────────────────
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+function setRows(id, val, ann) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = val; }
+  if (ann) { const ae = document.getElementById(ann); if (ae) ae.textContent = val; }
+}
+function setCols(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+function setShape(id, r, c) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = `${r} × ${c}`;
+}
+function setDimZero(boxId, isZero) {
+  const el = document.getElementById(boxId);
+  if (el) el.classList.toggle('dim-zero', isZero);
+}
+
+function render() {
+  const { N, n_obs, n_rem } = computeDims(STATE);
+  const { n_instructions, n_demo_subsets, n_demos, n_initial, n_iterations,
+          length_scale, signal_var, noise_var, t } = STATE;
+
+  // ── Sidebar display values ──
+  ['n_instructions','n_demo_subsets','n_demos','n_initial','n_iterations'].forEach(k => {
+    setText(`v-${k}`, STATE[k]);
+  });
+  setText('v-length_scale', length_scale.toFixed(2));
+  setText('v-signal_var',   signal_var.toFixed(2));
+  setText('v-noise_var',    noise_var.toFixed(3));
+
+  setText('n-candidates-val',
+    `N = (${n_instructions}+1) × ${n_demo_subsets} = ${N}`);
+
+  setText('t-display', `t = ${t}`);
+  setText('sc-n_obs', n_obs);
+  setText('sc-n_rem', n_rem);
+
+  // ── PROPOSE annotations ──
+  setText('ann-n-inst-plus1',  n_instructions + 1);
+  setText('ann-n-inst',        n_instructions);
+  setText('ann-n-inst-plus1b', n_instructions + 1);
+  setText('ann-n-subsets',     n_demo_subsets);
+  setText('ann-N-cand',        N);
+  setText('ann-n-demos',       n_demos);
+
+  // X_all
+  setRows('Xall-rows', N);
+  setText('Xall-rows-ann', `(n_inst+1)×n_sub = ${N}`);
+  setShape('Xall-shape', N, 1536);
+
+  // ── EVALUATE: Warm Start ──
+  setText('ann-n-init',  n_initial);
+  setText('ann-n-init2', n_initial);
+  setRows('Xow-rows', n_initial);
+  setShape('Xow-shape', n_initial, 1536);
+  setRows('yow-rows', n_initial);
+  setShape('yow-shape', n_initial, 1);
+
+  // ── BO Loop header ──
+  setText('bo-badge', `t = ${t} of ${n_iterations}`);
+  setText('ic-n_obs', n_obs);
+  setText('ic-n_rem', n_rem);
+
+  // Fit Surrogate — K, Ky, L, alpha (all n_obs × n_obs)
+  setText('fa-sig', signal_var.toFixed(2));
+  setText('fa-ls',  length_scale.toFixed(2));
+  setText('fa-nobs1', n_obs);
+  setText('fa-nv',  noise_var.toFixed(3));
+  setText('fa-Ky-shape', `${n_obs} × ${n_obs}`);
+  setText('fa-L-shape',  `${n_obs} × ${n_obs}`);
+  setText('fa-alpha-shape', `(${n_obs},)`);
+
+  ['K','Ky','L'].forEach(name => {
+    setRows(`${name}-rows`, n_obs);
+    setCols(`${name}-cols`, n_obs);
+    setShape(`${name}-shape`, n_obs, n_obs);
+  });
+  setRows('alpha-rows', n_obs);
+  setShape('alpha-shape', n_obs, 1);
+
+  // Acquire Next — k_star, mean, std, z, EI (n_rem × ...)
+  const remZero = n_rem === 0;
+  setText('fa-kstar-shape', `${n_rem} × ${n_obs}`);
+  setText('fa-kstar-r', n_rem);
+  setText('fa-kstar-c', n_obs);
+  setText('fa-alpha-r', n_obs);
+  setText('fa-mean-shape', n_rem);
+  setText('fa-v-r', n_obs);
+  setText('fa-v-c', n_rem);
+  setText('fa-sig2', signal_var.toFixed(2));
+  setText('fa-std-shape', n_rem);
+  setText('fa-z-shape',  n_rem);
+  setText('fa-ei-shape', n_rem);
+
+  setRows('kstar-rows', n_rem);
+  setText('kstar-rows-ann', `n_rem = N−n_obs`);
+  setCols('kstar-cols', n_obs);
+  setShape('kstar-shape', n_rem, n_obs);
+
+  ['mean','std','z','ei'].forEach(name => {
+    setRows(`${name}-rows`, n_rem);
+    setShape(`${name}-shape`, n_rem, 1);
+    setDimZero(`box-${name}`, remZero);
+  });
+  setDimZero('box-kstar', remZero);
+
+  // Score & Update — X_obs_bo, y_obs_bo grow with n_obs
+  setRows('Xbo-rows', n_obs);
+  setText('Xbo-rows-ann', `n_obs = n_init+(t−1)`);
+  setShape('Xbo-shape', n_obs, 1536);
+  setRows('ybo-rows', n_obs);
+  setShape('ybo-shape', n_obs, 1);
+
+  // ── SELECT summary ──
+  const total = Math.min(n_initial + n_iterations, N);
+  setText('sel-total', total);
+  setText('sel-N', N);
+  setText('sel-warm', n_initial);
+  setText('sel-iters', n_iterations);
+  setText('sel-saved', Math.max(0, N - total));
+}
+
+// ── Control Binding ────────────────────────────────────────────────
+let _syncing = false;
+
+function bindControls() {
+  document.querySelectorAll('[data-key]').forEach(el => {
+    el.addEventListener('input', () => {
+      if (_syncing) return;
+      const key = el.dataset.key;
+      const isFloat = ['length_scale','signal_var','noise_var'].includes(key);
+      STATE[key] = isFloat ? parseFloat(el.value) : parseInt(el.value, 10);
+      if (isNaN(STATE[key])) return;
+      enforceConstraints();
+      // Sync sibling inputs with same data-key
+      _syncing = true;
+      document.querySelectorAll(`[data-key="${key}"]`).forEach(sibling => {
+        if (sibling !== el && parseFloat(sibling.value) !== STATE[key]) {
+          sibling.value = STATE[key];
+        }
+      });
+      _syncing = false;
+      render();
+    });
+  });
+}
+
+// ── Init ───────────────────────────────────────────────────────────
+bindControls();
+enforceConstraints();
+render();
+</script>
+</body>
+</html>
