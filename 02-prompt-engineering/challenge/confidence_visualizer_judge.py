@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 from llm_provider import get_llm
+from cost_estimator import DRY_RUN, record_generate_call
 
 load_dotenv()
 llm = get_llm()
@@ -138,6 +139,12 @@ if st.button("Ask"):
     choices = [c.strip() for c in choices_raw.strip().splitlines() if c.strip()]
     if len(choices) < 2:
         st.error("Enter at least 2 choices.")
+    elif DRY_RUN:
+        prompt, _ = build_prompt(question, choices)
+        input_tokens, cost = record_generate_call(
+            os.getenv("LLM_PROVIDER", ""), os.getenv("LLM_MODEL", ""), prompt, judge_criteria
+        )
+        st.info(f"DRY RUN — no call made. Estimated input tokens: {input_tokens}, cost: ${cost:.4f}")
     else:
         with st.spinner("Querying model..."):
             results, chosen = query_llm(question, choices, judge_criteria)

@@ -18,13 +18,21 @@ Environment variables:
                 Ollama tag, e.g. OLLAMA_MODEL=gemma4:latest can be used as an
                 alias for LLM_MODEL for a local-only setup.
 
+Set DRY_RUN=1 (or pass --dry-run) to make get_llm() return a DryRunProvider
+instead: it makes no network calls and no API key is required, but it does
+need LLM_PROVIDER/LLM_MODEL set so cost_estimator.py knows which pricing table
+to use. See cost_estimator.py for the token/cost estimation logic.
+
 See .env.example for a filled-in sample of each backend.
 """
 
 import os
+import random
 import time
 
 import requests
+
+import cost_estimator
 
 
 class LLMProvider:
@@ -225,6 +233,36 @@ class OllamaProvider(LLMProvider):
         return response.json()["embedding"]
 
 
+class DryRunProvider(LLMProvider):
+    """Makes no network calls. Estimates tokens/cost via cost_estimator.py and
+    returns placeholder values so the calling script's normal control flow can
+    keep running (and thus keep making — and tallying — every planned call).
+    """
+
+    def __init__(self, provider_name="", model="", embedding_model=""):
+        self.provider_name = provider_name
+        self.model = model
+        self.embedding_model = embedding_model
+
+    def generate(self, user_prompt, system_prompt=None, temp=None, logprobs=False,
+                 top_logprobs=None, return_raw=False):
+        if logprobs or return_raw:
+            raise NotImplementedError(
+                "Dry-run mode doesn't simulate logprobs/raw responses. This call site "
+                "(confidence_visualizer_judge.py / confidence_visualizer_mcq.py) estimates "
+                "cost itself instead of going through get_llm() in dry-run mode."
+            )
+        cost_estimator.record_generate_call(self.provider_name, self.model, user_prompt, system_prompt or "")
+        return "[DRY RUN — no call made]"
+
+    def embed(self, text):
+        cost_estimator.record_embed_call(self.provider_name, self.embedding_model, text)
+        # Fixed-size placeholder vector — real dimension depends on the configured model.
+        # Distinct per input so cosine-similarity math downstream doesn't hit degenerate
+        # all-identical vectors.
+        return [random.gauss(0, 1) for _ in range(8)]
+
+
 _PROVIDERS = {
     "openai": OpenAIProvider,
     "anthropic": AnthropicProvider,
@@ -245,4 +283,9 @@ def get_llm():
 
     model = os.getenv("LLM_MODEL", "")
     embedding_model = os.getenv("LLM_EMBEDDING_MODEL", "")
+
+    if cost_estimator.DRY_RUN:
+        # No credentials required — dry-run makes no real calls.
+        return DryRunProvider(provider_name=provider_name, model=model, embedding_model=embedding_model)
+
     return _PROVIDERS[provider_name](model=model, embedding_model=embedding_model)

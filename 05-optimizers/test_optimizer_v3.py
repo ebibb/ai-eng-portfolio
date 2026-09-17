@@ -23,6 +23,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import optimizer_v3 as v3
+from cost_estimator import DRY_RUN, print_dry_run_summary
 from eval import load_dataset, split
 
 # ── Shared test fixtures ───────────────────────────────────────────────────────
@@ -548,6 +549,8 @@ if __name__ == "__main__":
         choice = input("\nSelect test: ").strip().lower()
 
         if choice == "q":
+            if DRY_RUN:
+                print_dry_run_summary()
             break
         elif choice == "0":
             reset_counts()

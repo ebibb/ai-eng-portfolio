@@ -15,6 +15,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from llm_provider import get_llm
+from cost_estimator import DRY_RUN, print_dry_run_summary
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,6 +30,21 @@ def cosine_similarity(a: list[float], b: list[float]) -> float:
 
 
 def run_tests():
+    if DRY_RUN:
+        # Real vectors are placeholder/random in dry-run mode, so the semantic-similarity
+        # and consistency assertions below don't apply — just tally the same 5 calls.
+        for text in [
+            "Classify the support ticket into billing, technical, or general.",
+            "my credit card was charged twice",
+            "the app crashes every time I open it",
+            "I was billed the wrong amount on my invoice",
+            "Respond with only the category label.",
+            "Respond with only the category label.",
+        ]:
+            llm.embed(text)
+        print_dry_run_summary()
+        return
+
     passed = 0
     failed = 0
 

@@ -55,6 +55,7 @@ from dotenv import load_dotenv
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from llm_provider import get_llm  # noqa: E402
+from cost_estimator import DRY_RUN, print_dry_run_summary  # noqa: E402
 
 load_dotenv()
 llm = get_llm()
@@ -180,11 +181,14 @@ if __name__ == "__main__":
         expected_output="technical",
         input_text="My app crashes whenever I try to upload a file.",
     )
-    print(f"Score:    {result.score}")
-    print(f"Critique: {result.critique}")
-    print()
-    print("Acceptance check: does the critique mention 'crash', 'software', or 'technical'?")
-    print("If it just says 'the answer is incorrect', the judge prompt needs tuning.")
+    if DRY_RUN:
+        print_dry_run_summary()
+    else:
+        print(f"Score:    {result.score}")
+        print(f"Critique: {result.critique}")
+        print()
+        print("Acceptance check: does the critique mention 'crash', 'software', or 'technical'?")
+        print("If it just says 'the answer is incorrect', the judge prompt needs tuning.")
 
     # ── Judge judge_test_data.jsonl (reference-based) ─────────────────────────
     # import json

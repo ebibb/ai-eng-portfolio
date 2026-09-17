@@ -28,6 +28,10 @@ and fill in one provider's values. LLM calls go through `llm_provider.py`, which
 switching providers is an env var change, not a code change. `ollama` runs fully local against
 a model you've pulled (e.g. `gemma4:latest`), no API key or cost required.
 
+Set `DRY_RUN=1` (or pass `--dry-run`) on any script to preview the estimated call count, token
+count, and dollar cost without making any real calls — useful before running `05-optimizers/
+ablation.py`, which makes hundreds of calls in a real run.
+
 Each section's README has the exact command to run its scripts. Each optimizer writes a full run log to its own `artifacts/` folder; one representative log per optimizer is committed here.
 
 ## License

@@ -22,6 +22,7 @@ from dotenv import load_dotenv
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from llm_provider import get_llm  # noqa: E402
+from cost_estimator import DRY_RUN, print_dry_run_summary  # noqa: E402
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "03-eval-harness"))
 from eval import evaluate, metric, load_dataset, split  # noqa: E402
@@ -191,7 +192,7 @@ def optimize(
     demo_pool = bootstrap(zero_shot_prog, train=train)
 
     # 3. propose_candidates() from the demo pool.
-    if not demo_pool:
+    if not demo_pool and not DRY_RUN:
         print("Bootstrap found no correct examples — cannot propose candidates.")
         return None, zero_shot_score
     candidates = propose_candidates(demo_pool=demo_pool, instruction=instruction, n_candidates=n_candidates, n_demos=n_demos)
@@ -223,6 +224,9 @@ if __name__ == "__main__":
 
     print(f"Dataset: {len(train_data)} train, {len(val_data)} val examples")
     best_candidate, best_score = optimize(train_data, val_data)
-    print(f"\nBest val score: {best_score:.3f}")
-    print(f"Best instruction: {best_candidate.get('instruction', '')}")
-    print(f"Best demos ({len(best_candidate.get('demos', []))}): {best_candidate.get('demos', [])}")
+    if DRY_RUN:
+        print_dry_run_summary()
+    else:
+        print(f"\nBest val score: {best_score:.3f}")
+        print(f"Best instruction: {best_candidate.get('instruction', '')}")
+        print(f"Best demos ({len(best_candidate.get('demos', []))}): {best_candidate.get('demos', [])}")

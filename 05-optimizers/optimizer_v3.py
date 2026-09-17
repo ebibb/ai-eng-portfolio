@@ -34,6 +34,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "04-llm-as-judg
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from llm_provider import get_llm  # noqa: E402
+from cost_estimator import DRY_RUN, print_dry_run_summary  # noqa: E402
 from eval import evaluate, metric, load_dataset, split  # noqa: E402
 from optimizer_v1 import zero_shot_program, bootstrap, build_program, build_prompt_template  # noqa: E402
 from optimizer_v2 import propose_instruction_candidates, propose_candidates_v2, SEED_INSTRUCTION, optimize_v2  # noqa: E402
@@ -254,7 +255,7 @@ def optimize_v3(
 
     # 2. bootstrap() to get the demo pool (same as v1 & v2).
     demo_pool = bootstrap(zero_shot_prog, train=train)
-    if not demo_pool:
+    if not demo_pool and not DRY_RUN:
         print("Bootstrap found no correct examples — cannot propose candidates.")
         return None, zero_shot_score
 
@@ -472,9 +473,13 @@ if __name__ == "__main__":
     )
     try:
         best_candidate, best_score = optimize_v3(train_data, val_data)
-        print(f"\nBest val score (v3): {best_score:.3f}")
-        if best_candidate:
-            print(f"Best instruction: {best_candidate.get('instruction', '')[:120]}")
+        if DRY_RUN:
+            print_dry_run_summary()
+        else:
+            print(f"\nBest val score (v3): {best_score:.3f}")
+            if best_candidate:
+                print(f"Best instruction: {best_candidate.get('instruction', '')[:120]}")
     finally:
-        write_run_log(log_path)
-        print(f"\nRun log written to: {log_path}")
+        if not DRY_RUN:
+            write_run_log(log_path)
+            print(f"\nRun log written to: {log_path}")

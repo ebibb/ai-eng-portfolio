@@ -12,6 +12,7 @@ import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "03-eval-harness"))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "05-optimizers"))
+from cost_estimator import DRY_RUN, print_dry_run_summary  # noqa: E402
 from eval import evaluate, load_dataset, split  # noqa: E402
 from optimizer_v1 import bootstrap, zero_shot_program, DEFAULT_INSTRUCTION  # noqa: E402
 
@@ -29,6 +30,9 @@ zero_shot_score = evaluate(zero_shot_prog, val_data)
 print("Running bootstrap on train...")
 demo_pool = bootstrap(zero_shot_prog, train_data)
 
-print("\n── Paste these into ablation.py ──────────────────────────")
-print(f"ZERO_SHOT_SCORE = {zero_shot_score}")
-print(f"DEMO_POOL = {json.dumps(demo_pool, indent=2)}")
+if DRY_RUN:
+    print_dry_run_summary()
+else:
+    print("\n── Paste these into ablation.py ──────────────────────────")
+    print(f"ZERO_SHOT_SCORE = {zero_shot_score}")
+    print(f"DEMO_POOL = {json.dumps(demo_pool, indent=2)}")

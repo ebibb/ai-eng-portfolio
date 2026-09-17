@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from dotenv import load_dotenv
 from llm_provider import get_llm
+from cost_estimator import DRY_RUN, print_dry_run_summary
 
 
 load_dotenv()
@@ -163,8 +164,9 @@ reports.append(build_results_report("few_shot", "train", prompt_correct_count["f
 reports.append(build_results_report("few_shot_cot", "train", prompt_correct_count["few_shot_cot"], prompt_outputs["few_shot_cot"]))
 
 results_path = os.path.join(os.path.dirname(__file__), "artifacts", "prompt_train_tickets_results.txt")
-with open(results_path, "w") as results_file:
-    results_file.write("\n".join(reports))
+if not DRY_RUN:
+    with open(results_path, "w") as results_file:
+        results_file.write("\n".join(reports))
 
 
 # TEST TICKETS
@@ -178,7 +180,11 @@ reports.append(build_results_report("few_shot", "test", prompt_correct_count["fe
 reports.append(build_results_report("few_shot_cot", "test", prompt_correct_count["few_shot_cot"], prompt_outputs["few_shot_cot"]))
 
 results_path = os.path.join(os.path.dirname(__file__), "artifacts", "prompt_test_tickets_results.txt")
-with open(results_path, "w") as results_file:
-    results_file.write("\n".join(reports))
+if not DRY_RUN:
+    with open(results_path, "w") as results_file:
+        results_file.write("\n".join(reports))
 
-print("Complete! Check artifacts folder for results.")
+if DRY_RUN:
+    print_dry_run_summary()
+else:
+    print("Complete! Check artifacts folder for results.")

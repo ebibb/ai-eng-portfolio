@@ -10,3 +10,7 @@ streamlit==1.64.0
 # a running local server (https://ollama.com).
 openai==3.14.1
 anthropic==1.6.0
+
+# --dry-run / DRY_RUN=1 token counting for openai/azure (see cost_estimator.py);
+# anthropic/ollama fall back to a character-based estimate without this.
+tiktoken==0.14.0

@@ -16,6 +16,7 @@ import sys
 from dotenv import load_dotenv
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from llm_provider import get_llm
+from cost_estimator import DRY_RUN, print_dry_run_summary
 from eval import evaluate, load_dataset, split
 
 load_dotenv()
@@ -37,5 +38,12 @@ train_set = split(dataset, "train")
 val_set = split(dataset, "val")
 test_set = split(dataset, "test")
 
-train_score = evaluate(classify, train_set, log_path="logs/train_failures_1.jsonl", log_failures_only=True)
-print(f"Train score: {train_score:.3f}")
+train_score = evaluate(
+    classify, train_set,
+    log_path=None if DRY_RUN else "logs/train_failures_1.jsonl",
+    log_failures_only=True,
+)
+if DRY_RUN:
+    print_dry_run_summary()
+else:
+    print(f"Train score: {train_score:.3f}")

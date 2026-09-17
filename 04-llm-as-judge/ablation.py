@@ -20,6 +20,7 @@ from dotenv import load_dotenv
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from llm_provider import get_llm  # noqa: E402
+from cost_estimator import DRY_RUN, print_dry_run_summary  # noqa: E402
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "03-eval-harness"))
 from eval import evaluate, metric, load_dataset, split  # noqa: E402
@@ -431,6 +432,9 @@ if __name__ == "__main__":
     best_candidate, best_score, all_scored = select_best(candidates, val_data)
 
     # 3. Print and log results
-    print_result(N_DEMOS, N_CANDIDATES, best_candidate, best_score, all_scored, seed)
-    log_path = write_log(N_DEMOS, N_CANDIDATES, best_candidate, best_score, all_scored, seed)
-    print(f"\nLog written to: {log_path}")
+    if DRY_RUN:
+        print_dry_run_summary()
+    else:
+        print_result(N_DEMOS, N_CANDIDATES, best_candidate, best_score, all_scored, seed)
+        log_path = write_log(N_DEMOS, N_CANDIDATES, best_candidate, best_score, all_scored, seed)
+        print(f"\nLog written to: {log_path}")

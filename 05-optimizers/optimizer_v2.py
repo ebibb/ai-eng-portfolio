@@ -26,6 +26,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "04-llm-as-judg
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # ensure this dir's optimizer_v1.py is used
 from llm_provider import get_llm  # noqa: E402
+from cost_estimator import DRY_RUN, print_dry_run_summary  # noqa: E402
 from eval import evaluate, metric, load_dataset, split  # noqa: E402
 from optimizer_v1 import zero_shot_program, bootstrap, build_program, select_best  # noqa: E402
 from optimizer_v1 import optimize as optimize_v1  # noqa: E402
@@ -149,7 +150,7 @@ def optimize_v2(
 
     # 2. bootstrap() to get the demo pool (same as v1).
     demo_pool = bootstrap(zero_shot_prog, train=train)
-    if not demo_pool:
+    if not demo_pool and not DRY_RUN:
         print("Bootstrap found no correct examples — cannot propose candidates.")
         return None, zero_shot_score
     
@@ -181,8 +182,9 @@ def optimize_v2(
     v1_best_candidate, v1_score = optimize_v1(train, val)
     _run_log["v1_best_candidate"] = v1_best_candidate
     _run_log["v1_best_score"] = v1_score
-    assert v2_score > v1_score, f"v2 score ({v2_score:.3f}) is not greater than v1 score ({v1_score:.3f})"
-    print(f"v2 score ({v2_score:.3f}) is greater than v1 score ({v1_score:.3f})")
+    if not DRY_RUN:
+        assert v2_score > v1_score, f"v2 score ({v2_score:.3f}) is not greater than v1 score ({v1_score:.3f})"
+        print(f"v2 score ({v2_score:.3f}) is greater than v1 score ({v1_score:.3f})")
     return best_candidate, best_score
 
 
@@ -295,9 +297,13 @@ if __name__ == "__main__":
     )
     try:
         best_candidate, best_score = optimize_v2(train_data, val_data)
-        print(f"\nBest val score (v2): {best_score:.3f}")
-        if best_candidate:
-            print(f"Best instruction: {best_candidate.get('instruction', '')[:120]}")
+        if DRY_RUN:
+            print_dry_run_summary()
+        else:
+            print(f"\nBest val score (v2): {best_score:.3f}")
+            if best_candidate:
+                print(f"Best instruction: {best_candidate.get('instruction', '')[:120]}")
     finally:
-        write_run_log(log_path)
-        print(f"\nRun log written to: {log_path}")
+        if not DRY_RUN:
+            write_run_log(log_path)
+            print(f"\nRun log written to: {log_path}")
