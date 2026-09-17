@@ -13,8 +13,8 @@ Run:
     python 05-optimizers/optimizer_v3.py
 
 Requires:
-    AZURE_APIM_ENDPOINT, AZURE_APIM_SUBSCRIPTION_KEY, AZURE_OPENAI_MODEL,
-    AZURE_OPENAI_API_VERSION, AZURE_OPENAI_EMBEDDING_MODEL set in your environment.
+    LLM_PROVIDER and LLM_EMBEDDING_MODEL set in your environment (see ../.env.example).
+    Anthropic has no embeddings API — use openai, azure, or ollama for this file.
     03-eval-harness/data/dataset.jsonl populated with real examples.
 """
 
@@ -33,18 +33,13 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "03-eval-harnes
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "04-llm-as-judge"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from azure_llm_wrapper import AzureLLMWrapper  # noqa: E402
+from llm_provider import get_llm  # noqa: E402
 from eval import evaluate, metric, load_dataset, split  # noqa: E402
 from optimizer_v1 import zero_shot_program, bootstrap, build_program, build_prompt_template  # noqa: E402
 from optimizer_v2 import propose_instruction_candidates, propose_candidates_v2, SEED_INSTRUCTION, optimize_v2  # noqa: E402
 
 load_dotenv()
-api_key = os.getenv("AZURE_APIM_SUBSCRIPTION_KEY", "")
-deployment = "text-embedding-3-small"
-version = os.getenv("AZURE_OPENAI_API_VERSION", "")
-endpoint = os.getenv("AZURE_APIM_ENDPOINT", "")
-embedding_url = f"{endpoint}/openai/deployments/{deployment}/embeddings"
-llm = AzureLLMWrapper(endpoint=embedding_url, api_key=api_key)
+llm = get_llm()
 
 Dataset = list[dict]
 
@@ -66,11 +61,11 @@ def candidate_to_text(candidate: dict) -> str:
 
 
 def embed_candidate(candidate: dict) -> np.ndarray:
-    # Call the Azure embedding API on the candidate's text representation;
-    # return a 1536-dim semantic vector as a numpy array.
+    # Call the embedding API on the candidate's text representation;
+    # return a semantic vector as a numpy array.
     text = candidate_to_text(candidate)
     if text not in _embed_cache:
-        response = llm.embed(text, embedding_url, api_version=version)
+        response = llm.embed(text)
         _embed_cache[text] = np.array(response)
     return _embed_cache[text]
 

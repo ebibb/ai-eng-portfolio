@@ -34,7 +34,7 @@ PROPOSE
 │     This finite pool is the entire search space for the BO loop
 │
 └── Embed Pool
-      Serialize each candidate to one string, call Azure embedding API,
+      Serialize each candidate to one string, call the embedding API,
       stack results → one row per candidate (N × 1536 matrix)
 
 
@@ -88,7 +88,7 @@ PROPOSE
 │
 └── Embed Pool
       candidate_to_text(candidate)  →  "instruction | input→gold | input→gold …"
-      embed_candidate(candidate)    →  candidate_to_text → Azure embedding API → np.array (1536,)
+      embed_candidate(candidate)    →  candidate_to_text → embedding API → np.array (1536,)
       embed_pool(candidates)        →  embed_candidate() for each → stack → (N × 1536)
 
 
@@ -167,11 +167,8 @@ sys, os, random, datetime, math               — math.erf, math.exp, math.sqrt,
 # Numerical
 numpy                                          — all matrix ops (dot, linalg.cholesky, linalg.solve, exp)
 
-# HTTP (embedding API calls)
-urllib.request, json                           — call Azure embedding endpoint directly; no new library needed
-
 # Project modules (reused from v1/v2)
-AzureLLMWrapper                                — LLM calls (instruction generation, same env-var setup)
+llm_provider.get_llm()                         — provider-agnostic LLM + embedding calls (instruction generation, same env-var setup)
 eval: evaluate, metric, load_dataset, split    — scoring harness (unchanged from the eval harness section)
 optimizer_v1: zero_shot_program, bootstrap,
               build_program, build_prompt_template — program construction and evaluation helpers
@@ -204,7 +201,7 @@ the embedding model handles text as-is, and stripping formatting loses signal.
 
 ### `embed_candidate(candidate: dict) -> np.ndarray`
 
-**Purpose:** Produce a single 1536-dim semantic vector for a candidate via the Azure embedding API.
+**Purpose:** Produce a single 1536-dim semantic vector for a candidate via the embedding API (via `llm_provider.py`; 1536 dims when using `text-embedding-3-small` — dimension depends on the configured embedding model).
 
 **Shape:** `(1536,)`
 
@@ -491,7 +488,7 @@ Same structure as v2's `write_run_log`. Sections to include:
 
 | Decision | Rationale |
 |---|---|
-| Azure embedding API (single string) | Captures semantic similarity — synonymous instructions are close in embedding space; TF-IDF only measures lexical overlap and misses this |
+| Embedding API, single string (provider-agnostic via `llm_provider.py`) | Captures semantic similarity — synonymous instructions are close in embedding space; TF-IDF only measures lexical overlap and misses this |
 | Single string, not instruction + demos separately | Splitting and concatenating doubles dimensionality without giving the GP more signal; high-D hurts RBF kernels |
 | RBF kernel from scratch (numpy only) | No sklearn/scipy dependency; all math visible; appropriate since semantically similar candidates tend to score similarly |
 | Cholesky solve instead of matrix inversion | Numerically stable when two candidates have similar embeddings (near-singular K) |

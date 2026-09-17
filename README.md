@@ -22,14 +22,11 @@ The friction log in [`02-prompt-engineering/friction_log.md`](02-prompt-engineer
 
 ## Running the code
 
-LLM calls go through `azure_llm_wrapper.py`, configured with environment variables:
-
-```
-AZURE_APIM_ENDPOINT=...
-AZURE_APIM_SUBSCRIPTION_KEY=...
-AZURE_OPENAI_MODEL=...
-AZURE_OPENAI_API_VERSION=...
-```
+Install dependencies with `pip install -r requirements.txt`, then copy `.env.example` to `.env`
+and fill in one provider's values. LLM calls go through `llm_provider.py`, which reads
+`LLM_PROVIDER` (`openai` | `anthropic` | `azure` | `ollama`) and dispatches to that backend —
+switching providers is an env var change, not a code change. `ollama` runs fully local against
+a model you've pulled (e.g. `gemma4:latest`), no API key or cost required.
 
 Each section's README has the exact command to run its scripts. Each optimizer writes a full run log to its own `artifacts/` folder; one representative log per optimizer is committed here.
 

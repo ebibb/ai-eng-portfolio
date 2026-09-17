@@ -15,15 +15,11 @@ import os
 import sys
 from dotenv import load_dotenv
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from azure_llm_wrapper import AzureLLMWrapper
+from llm_provider import get_llm
 from eval import evaluate, load_dataset, split
 
 load_dotenv()
-api_key = os.getenv("AZURE_APIM_SUBSCRIPTION_KEY", "")
-model = os.getenv("AZURE_OPENAI_MODEL", "")
-version = os.getenv("AZURE_OPENAI_API_VERSION", "")
-endpoint = os.getenv("AZURE_APIM_ENDPOINT", "") + "/openai/deployments/" + model + "/chat/completions?api-version=" + version
-llm = AzureLLMWrapper(endpoint=endpoint, api_key=api_key)
+llm = get_llm()
 
 def classify(input: str) -> str:
     return llm.generate(

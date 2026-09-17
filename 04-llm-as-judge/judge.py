@@ -46,7 +46,7 @@ Run:
     python 04-llm-as-judge/judge.py
 
 Requires:
-    AZURE_APIM_ENDPOINT and AZURE_APIM_SUBSCRIPTION_KEY set in your environment.
+    LLM_PROVIDER and LLM_MODEL set in your environment (see ../.env.example).
 """
 import sys
 import os
@@ -54,14 +54,10 @@ from dataclasses import dataclass
 from dotenv import load_dotenv
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from azure_llm_wrapper import AzureLLMWrapper  # noqa: E402
+from llm_provider import get_llm  # noqa: E402
 
 load_dotenv()
-api_key = os.getenv("AZURE_APIM_SUBSCRIPTION_KEY", "")
-model = os.getenv("AZURE_OPENAI_MODEL", "")
-version = os.getenv("AZURE_OPENAI_API_VERSION", "")
-endpoint = os.getenv("AZURE_APIM_ENDPOINT", "") + "/openai/deployments/" + model + "/chat/completions?api-version=" + version
-llm = AzureLLMWrapper(endpoint=endpoint, api_key=api_key)
+llm = get_llm()
 
 
 # Reference-based: a known correct answer is available to compare against.

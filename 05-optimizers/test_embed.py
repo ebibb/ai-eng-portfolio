@@ -1,12 +1,12 @@
 """
-Test that AzureLLMWrapper.embed() works against the live Azure embedding endpoint.
+Test that the configured provider's embed() works against a live embedding endpoint.
 
 Run:
     python 05-optimizers/test_embed.py
 
 Requires:
-    AZURE_APIM_ENDPOINT, AZURE_APIM_SUBSCRIPTION_KEY, AZURE_OPENAI_API_VERSION,
-    AZURE_OPENAI_EMBEDDING_MODEL set in your environment.
+    LLM_PROVIDER and LLM_EMBEDDING_MODEL set in your environment (see ../.env.example).
+    Anthropic has no embeddings API — use openai, azure, or ollama for this file.
 """
 
 import math
@@ -14,16 +14,11 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from azure_llm_wrapper import AzureLLMWrapper
+from llm_provider import get_llm
 from dotenv import load_dotenv
 
 load_dotenv()
-api_key = os.getenv("AZURE_APIM_SUBSCRIPTION_KEY", "")
-deployment = "text-embedding-3-small"
-version = os.getenv("AZURE_OPENAI_API_VERSION", "")
-endpoint = os.getenv("AZURE_APIM_ENDPOINT", "")
-embedding_url = f"{endpoint}/openai/deployments/{deployment}/embeddings"
-llm = AzureLLMWrapper(endpoint=embedding_url, api_key=api_key)
+llm = get_llm()
 
 
 def cosine_similarity(a: list[float], b: list[float]) -> float:
@@ -48,22 +43,18 @@ def run_tests():
 
     print("\n── embed() basic contract ────────────────────────────────────────────")
 
-    vec = llm.embed("Classify the support ticket into billing, technical, or general.", embedding_url, api_version=version)
+    vec = llm.embed("Classify the support ticket into billing, technical, or general.")
 
     check("returns a list", isinstance(vec, list))
     check("elements are floats", all(isinstance(x, float) for x in vec))
     check("non-empty vector", len(vec) > 0)
-    check(
-        "expected embedding dimension (1536 or 3072)",
-        len(vec) in (1536, 3072),
-        f"got {len(vec)}",
-    )
+    print(f"  (embedding dimension: {len(vec)} — depends on the configured model)")
 
     print("\n── embed() semantic properties ───────────────────────────────────────")
 
-    vec_billing = llm.embed("my credit card was charged twice", embedding_url, api_version=version)
-    vec_technical = llm.embed("the app crashes every time I open it", embedding_url, api_version=version)
-    vec_billing2 = llm.embed("I was billed the wrong amount on my invoice", embedding_url, api_version=version)
+    vec_billing = llm.embed("my credit card was charged twice")
+    vec_technical = llm.embed("the app crashes every time I open it")
+    vec_billing2 = llm.embed("I was billed the wrong amount on my invoice")
 
     sim_same_category = cosine_similarity(vec_billing, vec_billing2)
     sim_diff_category = cosine_similarity(vec_billing, vec_technical)
@@ -77,8 +68,8 @@ def run_tests():
     print("\n── embed() consistency ───────────────────────────────────────────────")
 
     text = "Respond with only the category label."
-    vec_a = llm.embed(text, embedding_url, api_version=version)
-    vec_b = llm.embed(text, embedding_url, api_version=version)
+    vec_a = llm.embed(text)
+    vec_b = llm.embed(text)
     sim_identical = cosine_similarity(vec_a, vec_b)
 
     check(

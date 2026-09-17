@@ -10,7 +10,7 @@ Run:
     python 05-optimizers/optimizer_v1.py
 
 Requires:
-    AZURE_APIM_ENDPOINT and AZURE_APIM_SUBSCRIPTION_KEY set in your environment.
+    LLM_PROVIDER and LLM_MODEL set in your environment (see ../.env.example).
     03-eval-harness/data/dataset.jsonl populated with real examples.
 """
 import random
@@ -21,17 +21,13 @@ import os
 from dotenv import load_dotenv
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from azure_llm_wrapper import AzureLLMWrapper  # noqa: E402
+from llm_provider import get_llm  # noqa: E402
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "03-eval-harness"))
 from eval import evaluate, metric, load_dataset, split  # noqa: E402
 
 load_dotenv()
-api_key = os.getenv("AZURE_APIM_SUBSCRIPTION_KEY", "")
-model = os.getenv("AZURE_OPENAI_MODEL", "")
-version = os.getenv("AZURE_OPENAI_API_VERSION", "")
-endpoint = os.getenv("AZURE_APIM_ENDPOINT", "") + "/openai/deployments/" + model + "/chat/completions?api-version=" + version
-llm = AzureLLMWrapper(endpoint=endpoint, api_key=api_key)
+llm = get_llm()
 
 _v1_run_log: dict = {}
 

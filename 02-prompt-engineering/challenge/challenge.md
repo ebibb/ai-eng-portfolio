@@ -11,8 +11,8 @@ Run command:
 
 ## How the Code Works
 
-- Load Azure config from `.env`
-- Instantiate the API wrapper
+- Load LLM provider config from `.env` (see `../../.env.example`) — this app needs `LLM_PROVIDER=openai` or `azure`, since logprobs aren't available through Anthropic or Ollama
+- Instantiate the provider via `llm_provider.get_llm()`
 - Label each answer choice with a letter
 - Build a multiple-choice prompt from the question and choices
 - Send the prompt with `logprobs` enabled

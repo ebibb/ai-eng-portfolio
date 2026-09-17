@@ -73,7 +73,7 @@ Textual feedback can be acquired by using a judge llm to score the solver llm's 
   - Custom data structures
     - <code style="font-size:13px;">Program = Callable[[str], str]</code>
     - <code style="font-size:13px;">Dataset = list[dict]</code>
-  - <code style="font-size:13px;">llm = AzureLLMWrapper(endpoint, api_key)</code> - configured from env vars (<code style="font-size:13px;">AZURE_APIM_ENDPOINT</code>, <code style="font-size:13px;">AZURE_APIM_SUBSCRIPTION_KEY</code>, <code style="font-size:13px;">AZURE_OPENAI_MODEL</code>, <code style="font-size:13px;">AZURE_OPENAI_API_VERSION</code>)
+  - <code style="font-size:13px;">llm = get_llm()</code> - provider-agnostic (openai/anthropic/azure/ollama), configured from env vars (<code style="font-size:13px;">LLM_PROVIDER</code>, <code style="font-size:13px;">LLM_MODEL</code>)
   - <code style="font-size:13px;">DEFAULT_INSTRUCTION</code> - the baseline classification prompt used when no instruction is specified
 ---
 - **Functions**
@@ -203,7 +203,7 @@ Textual feedback can be acquired by using a judge llm to score the solver llm's 
           <span style="color:#fff; font-weight:700; font-size:13px;">START:</span>
         </div>
         <div style="background:#b8d9f0; padding:10px 12px; line-height:1.8; height:108px;">
-          <code style="font-size:10px; background:#1a4971; color:#fff; padding:2px 6px; border-radius:3px; display:inline-block;">AzureLLMWrapper()</code><br>
+          <code style="font-size:10px; background:#1a4971; color:#fff; padding:2px 6px; border-radius:3px; display:inline-block;">get_llm()</code><br>
           <code style="font-size:10px; background:#1a4971; color:#fff; padding:2px 6px; border-radius:3px; display:inline-block;">load_dataset()</code><br>
           <code style="font-size:10px; background:#1a4971; color:#fff; padding:2px 6px; border-radius:3px; display:inline-block;">split()</code>
         </div>

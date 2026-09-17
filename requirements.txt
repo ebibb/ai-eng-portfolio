@@ -1,0 +1,12 @@
+python-dotenv==1.0.1
+requests==2.32.3
+numpy==2.1.0
+matplotlib==3.9.2
+streamlit==1.64.0
+
+# LLM provider backends — only the ones you actually use need working credentials,
+# but all three are installed since llm_provider.py imports openai/anthropic lazily
+# per-provider (see LLM_PROVIDER in .env.example). Ollama needs no package, just
+# a running local server (https://ollama.com).
+openai==3.14.1
+anthropic==1.6.0
