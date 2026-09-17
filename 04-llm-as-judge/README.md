@@ -15,8 +15,8 @@ Keep these straight — it's the thing people trip on:
 
 ```
 input ──▶ [ SOLVER ] ──▶ generated output ──┐
-                                    ├──▶ [ JUDGE ] ──▶ score + critique
-input ─────────────────────────┘
+                                            ├──▶ [ JUDGE ] ──▶ score + critique
+input ──────────────────────────────────────┘
 ```
 
 The judge needs the **generated output** because you cannot grade an answer you cannot see. If you handed the judge only the input, it would have to solve the task itself — and then it's just a second solver. Throughout this section, **expected output** refers to the known correct answer (the eval harness's `gold`), and **generated output** to what the solver produced.
